@@ -1,0 +1,16 @@
+﻿Hoofdonderdelen:
+- Cursus-formulier (alleen toevoegen en markeren voor delete)
+- Historie/Versiebeheer?
+- Logging van Queries?
+
+Hoofdscherm:
+-
+
+Competentiekoppeling-formulier:
+- 
+
+BoKS-koppeling-formulier:
+-
+
+Cursus-formulier:
+-
