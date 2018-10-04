@@ -14,7 +14,7 @@ namespace Onderwijs
     public partial class frmMain : Form
     {
         private const int MAX_DOELEN = 8;
-        private SqlConnection cnnOnderwijs = new SqlConnection("Data Source=.\\SQLEXPRESS;Initial Catalog=OnderwijsETTI;User ID=sa;Password=saSQLExpress;MultipleActiveResultSets=true;");
+        private SqlConnection cnnOnderwijs = new SqlConnection("Data Source=" + Globals.DB_SERVER + ";Initial Catalog=" + Globals.DB_NAME + ";User ID=" + Globals.DB_USER + ";Password=" + Globals.DB_PASSWORD + ";MultipleActiveResultSets=true;");
         private int intDoel = 1;
         private int intSelectedIndex = -1;
         private bool blnStartupReady = false;

@@ -7,7 +7,7 @@ namespace Onderwijs
 {
     public partial class frmCompetentiekoppeling : Form
     {
-        private SqlConnection cnnOnderwijs = new SqlConnection("Data Source=.\\SQLEXPRESS;Initial Catalog=OnderwijsETTI;User ID=sa;Password=saSQLExpress;MultipleActiveResultSets=true;");
+        private SqlConnection cnnOnderwijs = new SqlConnection("Data Source=" + Globals.DB_SERVER + ";Initial Catalog=" + Globals.DB_NAME + ";User ID=" + Globals.DB_USER + ";Password=" + Globals.DB_PASSWORD + ";MultipleActiveResultSets=true;");
         private List<String> strNiveauAvT = new List<String>();
         private List<String> strNiveauAvC = new List<String>();
         private List<String> strNiveauMvZ = new List<String>();
