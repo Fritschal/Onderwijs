@@ -4,7 +4,7 @@
 - Logging van Queries?
 
 Hoofdscherm:
--
+- Checken op SQL-insertions...
 
 Competentiekoppeling-formulier:
 - 

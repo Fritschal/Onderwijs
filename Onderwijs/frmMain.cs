@@ -584,6 +584,10 @@ namespace Onderwijs
             int intRecordsUpdated = 0;
             int intRecordsInserted = 0;
 
+            /*
+             LET OP: HIERONDER MOET NOG GECONTROLEERD WORDEN OP SQL-TEKENS (strOmschrijving EN strOnderwerpen) DIE DE BOEL KUNNEN LATEN CRASHEN!
+             */
+
             // Stap 1: Haal informatie uit de controls van het scherm:
             GroupBox grpDoel = (GroupBox)Controls["grpDoel" + intDoelVolgnummer.ToString()];
             int intDoeltype = ((RadioButton)grpDoel.Controls["btnLeerdoel" + intDoelVolgnummer.ToString()]).Checked ? 1 : 2;
