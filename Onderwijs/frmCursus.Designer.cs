@@ -274,7 +274,7 @@
             this.Controls.Add(this.grpToets);
             this.Controls.Add(this.grpCursus);
             this.Name = "frmCursus";
-            this.Text = "frmCursus";
+            this.Text = "Cursus-details (under construction)";
             this.Load += new System.EventHandler(this.frmCursus_Load);
             this.grpCursuscode.ResumeLayout(false);
             this.grpCursuscode.PerformLayout();
