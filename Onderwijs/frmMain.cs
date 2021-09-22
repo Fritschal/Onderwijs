@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,12 +14,15 @@ namespace Onderwijs
 {
     public partial class frmMain : Form
     {
-        private const int MAX_DOELEN = 8;
+        private const int MAX_DOELEN = 6;
         private SqlConnection cnnOnderwijs = new SqlConnection("Data Source=" + Globals.DB_SERVER + ";Initial Catalog=" + Globals.DB_NAME + ";User ID=" + Globals.DB_USER + ";Password=" + Globals.DB_PASSWORD + ";MultipleActiveResultSets=true;");
         private int intDoel = 1;
-        private int intSelectedIndex = -1;
+        private int intSelectedToetsIndex = -1;
+        private int intSelectedCursusIndex = -1;
+        private int intPrevCursusIndex = -1;
         private bool blnStartupReady = false;
         private bool blnErIsIetsGewijzigd = false;
+        private bool blnNeeGeantwoord = false;
 
         public frmMain()
         {
@@ -42,15 +46,59 @@ namespace Onderwijs
 
         private void udsStatischeVulling()
         {
+            // Cursuscodes:
+            lstCursuscodes.Items.Clear();
+            using (SqlCommand cmdCursus = new SqlCommand("SELECT * FROM tblCursus ORDER BY strCode", cnnOnderwijs))
+            {
+                using (SqlDataReader rdrCursus = cmdCursus.ExecuteReader())
+                {
+                    while (rdrCursus.Read())
+                    {
+                        lstCursuscodes.Items.Add(rdrCursus["strCode"].ToString());
+                    }
+                }
+            }
+            lstCursuscodes.SelectedIndex = 0;
+        }
+
+        private void lstCursuscodes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Op dezelfde cursuscode geklikt:
+            if (lstCursuscodes.SelectedIndex == intSelectedCursusIndex)
+            {
+                return;
+            }
+
+            if (blnStartupReady && blnErIsIetsGewijzigd)
+            {
+                // Alle wijzigingen van de "vorige" toetscode opgeslagen?
+                if (MessageBox.Show("Moeten er nog wijzigingen opgeslagen worden?", "Verandering van toetscode...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    // Ga terug...
+                    lstCursuscodes.SelectedIndex = intSelectedCursusIndex;
+                    lstToetscodes.SelectedIndex = intSelectedToetsIndex;
+                    return;
+                }
+                else
+                {
+                    blnNeeGeantwoord = true;
+                }
+            }
+
+            // Onthoud de geselecteerde index voor later...
+            intSelectedCursusIndex = lstCursuscodes.SelectedIndex;
+
+            String strCursuscode = ((ListBox)sender).SelectedItem.ToString();
+
             // Toetscodes:
             lstToetscodes.Items.Clear();
-            using (SqlCommand cmdToets = new SqlCommand("SELECT * FROM tblToets ORDER BY strCode", cnnOnderwijs))
+            using (SqlCommand cmdToets = new SqlCommand("SELECT * FROM qryCursusToets WHERE Cursuscode = '" + strCursuscode + "' ORDER BY ToetsCode", cnnOnderwijs))
             {
                 using (SqlDataReader rdrToets = cmdToets.ExecuteReader())
                 {
                     while (rdrToets.Read())
                     {
-                        lstToetscodes.Items.Add(rdrToets["strCode"].ToString());
+                        lstToetscodes.Items.Add(rdrToets["Toetscode"].ToString());
                     }
                 }
             }
@@ -59,37 +107,40 @@ namespace Onderwijs
 
         private void lstToetscodes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Op dezelfde toetscode geklikt:
-            if (lstToetscodes.SelectedIndex == intSelectedIndex)
+            // Op dezelfde cursuscode/toetscode geklikt:
+            if (lstCursuscodes.SelectedIndex == intPrevCursusIndex && lstToetscodes.SelectedIndex == intSelectedToetsIndex)
             {
                 return;
             }
-            
-            if (blnStartupReady && blnErIsIetsGewijzigd)
+
+            if (blnStartupReady && blnErIsIetsGewijzigd && !blnNeeGeantwoord)
             {
                 // Alle wijzigingen van de "vorige" toetscode opgeslagen?
+                blnNeeGeantwoord = false;
                 if (MessageBox.Show("Moeten er nog wijzigingen opgeslagen worden?", "Verandering van toetscode...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     // Ga terug...
-                    lstToetscodes.SelectedIndex = intSelectedIndex;
+                    lstToetscodes.SelectedIndex = intSelectedToetsIndex;
                     return;
                 }
             }
 
             // Onthoud de geselecteerde index voor later...
-            intSelectedIndex = lstToetscodes.SelectedIndex;
+            intSelectedToetsIndex = lstToetscodes.SelectedIndex;
+            intPrevCursusIndex = lstCursuscodes.SelectedIndex;
 
             // Toetscode geselecteerd in lijst. Verwijder huidige onderwijsdoelen van het scherm:
-           for (int i = intDoel; i > 1; i--)
+            for (int i = intDoel; i > 1; i--)
             {
                 udsRemoveDoel();
             }
             udsClearDoel(1);
 
             // Haal bij toetscode horende onderwijsdoelen op:
-            String strToetscode = ((ListBox)sender).SelectedItem.ToString();
+            String strToetscode = lstToetscodes.SelectedItem.ToString();
+            String strCursuscode = lstCursuscodes.SelectedItem.ToString();
             int intDoelTeller = 0;
-            using (SqlCommand cmdOnderwijsdoel = new SqlCommand("SELECT * FROM qryDoel WHERE Toetscode = '" + strToetscode + "' ORDER BY DoelId", cnnOnderwijs))
+            using (SqlCommand cmdOnderwijsdoel = new SqlCommand("SELECT * FROM qryDoel WHERE Toetscode = '" + strToetscode + "' AND Cursuscode = '" + strCursuscode + "' ORDER BY DoelId", cnnOnderwijs))
             {
                 using (SqlDataReader rdrOnderwijsdoel = cmdOnderwijsdoel.ExecuteReader())
                 {
@@ -108,7 +159,7 @@ namespace Onderwijs
                         ((Label)grpDoel.Controls["lblDoelId" + intDoelTeller.ToString()]).Text = "(Id=" + intOnderwijsdoelId.ToString() + ")";
                         ((TextBox)grpDoel.Controls["txtOnderwijsdoel" + intDoelTeller.ToString()]).Text = rdrOnderwijsdoel["Omschrijving"].ToString();
                         ((TextBox)grpDoel.Controls["txtOnderwerpen" + intDoelTeller.ToString()]).Text = rdrOnderwijsdoel["Onderwerpen"].ToString();
-                        ((TextBox)grpDoel.Controls["txtWeging" + intDoelTeller.ToString()]).Text = (Convert.ToDecimal(rdrOnderwijsdoel["Weging"].ToString())/1.00000m).ToString();
+                        ((TextBox)grpDoel.Controls["txtWeging" + intDoelTeller.ToString()]).Text = (Convert.ToDecimal(rdrOnderwijsdoel["Weging"].ToString()) / 1.00000m).ToString();
                         ((CheckBox)grpDoel.Controls["chkOnthouden" + intDoelTeller.ToString()]).Checked = (bool)rdrOnderwijsdoel["Onthouden"];
                         ((CheckBox)grpDoel.Controls["chkBegrijpen" + intDoelTeller.ToString()]).Checked = (bool)rdrOnderwijsdoel["Begrijpen"];
                         ((CheckBox)grpDoel.Controls["chkToepassen" + intDoelTeller.ToString()]).Checked = (bool)rdrOnderwijsdoel["Toepassen"];
@@ -126,6 +177,120 @@ namespace Onderwijs
                     }
                 }
             }
+
+            // Toon toetsinformatie:
+            String strCursusnaam;
+            String strCursustype;
+
+            using (SqlCommand cmdToets = new SqlCommand("SELECT * FROM qryToets WHERE Toetscode = '" + strToetscode + "' AND Cursuscode = '" + strCursuscode + "'", cnnOnderwijs))
+            {
+                using (SqlDataReader rdrToets = cmdToets.ExecuteReader())
+                {
+                    rdrToets.Read();
+            //        strCursuscode = rdrToets["Cursuscode"].ToString();
+                    strCursusnaam = rdrToets["Cursusnaam"].ToString();
+                    strCursustype = rdrToets["Cursustype"].ToString();
+                    txtBeoordelingswijze.Text = rdrToets["Beoordelingswijze"].ToString();
+                    txtToetscode.Text = rdrToets["Toetscode"].ToString();
+                    txtToetsnaam.Text = rdrToets["Toets"].ToString();
+                    txtToetsvorm.Text = rdrToets["Toetsvorm"].ToString();
+                    txtPeriode.Text = rdrToets["Periode"].ToString();
+                    txtBlok.Text = rdrToets["Blok"].ToString();
+                    txtECs.Text = Convert.ToSingle(rdrToets["ECs"].ToString()).ToString();
+                    txtKeuzedeel.Text = rdrToets["Keuzedeel"].ToString().Equals("True") ? "Ja" : "Nee";
+                }
+            }
+
+            // Toon cursusinformatie:
+            txtCursuscode.Text = strCursuscode;
+            txtCursusnaam.Text = strCursusnaam;
+            btnProject.Checked = strCursustype.Equals("Project");
+            btnVak.Checked = strCursustype.Equals("Vak");
+
+            // 1: Trajecten:
+            using (SqlCommand cmdTrajectCursus = new SqlCommand("SELECT * FROM qryTrajectCursus WHERE Cursuscode = '" + strCursuscode + "'", cnnOnderwijs))
+            {
+                using (SqlDataReader rdrTrajectCursus = cmdTrajectCursus.ExecuteReader())
+                {
+                    chkHW.Checked = false;
+                    chkAU.Checked = false;
+                    chkSW.Checked = false;
+                    while (rdrTrajectCursus.Read())
+                    {
+                        switch (rdrTrajectCursus["Trajectcode"].ToString())
+                        {
+                            case ("HW"):
+                                chkHW.Checked = true;
+                                break;
+                            case ("AU"):
+                                chkAU.Checked = true;
+                                break;
+                            case ("SW"):
+                                chkSW.Checked = true;
+                                break;
+                        }
+                    }
+                }
+            }
+
+            // 2: Blok/Periode:
+            String strPeriodes = "";
+            String strBlokken = "";
+            bool eersteBlok = true;
+            using (SqlCommand cmdBlokCursus = new SqlCommand("SELECT * FROM qryBlokCursus WHERE Cursuscode = '" + strCursuscode + "'", cnnOnderwijs))
+            {
+                using (SqlDataReader rdrBlokCursus = cmdBlokCursus.ExecuteReader())
+                {
+                    while (rdrBlokCursus.Read())
+                    {
+                        if (eersteBlok)
+                        {
+                            eersteBlok = false;
+                            strPeriodes += rdrBlokCursus["Periode"].ToString();
+                            strBlokken += rdrBlokCursus["Blok"].ToString();
+                        }
+                        else
+                        {
+                            strPeriodes += ", " + rdrBlokCursus["Periode"].ToString();
+                            strBlokken += ", " + rdrBlokCursus["Blok"].ToString();
+                        }
+                    }
+                    txtCursusBlok.Text = strBlokken;
+                    txtCursusPeriode.Text = strPeriodes;
+                }
+            }
+
+            // 3: Toetsen, EC's:
+            float fltECs = (float)0.0;
+            bool eersteKeuzedeel = true;
+            lstCursusToetsen.Items.Clear();
+            using (SqlCommand cmdCursusToets = new SqlCommand("SELECT * FROM qryCursusToets WHERE Cursuscode = '" + strCursuscode + "'", cnnOnderwijs))
+            {
+                using (SqlDataReader rdrCursusToets = cmdCursusToets.ExecuteReader())
+                {
+                    while (rdrCursusToets.Read())
+                    {
+                        lstCursusToetsen.Items.Add(rdrCursusToets["Toetscode"].ToString());
+
+                        // In geval van 'keuzedeel', dan alleen EC's van de eerste instantie sommeren:
+                        if (rdrCursusToets["Keuzedeel"].ToString().Equals("True"))
+                        {
+                            if (eersteKeuzedeel)
+                            {
+                                eersteKeuzedeel = false;
+                                fltECs += Convert.ToSingle(rdrCursusToets["ECs"].ToString());
+                            }
+                        }
+                        else
+                        {
+                            fltECs += Convert.ToSingle(rdrCursusToets["ECs"].ToString());
+                        }
+                    }
+                }
+            }
+            txtCursusECs.Text = fltECs.ToString();
+
+
             blnErIsIetsGewijzigd = false;
         }
 
@@ -301,6 +466,7 @@ namespace Onderwijs
                         txtTo.Name = ctrFrom.Tag.ToString() + intDoel.ToString();
                         txtTo.ScrollBars = ((TextBox)ctrFrom).ScrollBars;
                         txtTo.TextAlign = ((TextBox)ctrFrom).TextAlign;
+                        //txtTo.BackColor = ((TextBox)ctrFrom).BackColor;
                         if (ctrFrom.Tag.ToString().Equals("txtWeging"))
                         {
                             txtTo.Text = "0";
@@ -320,6 +486,7 @@ namespace Onderwijs
                         lstTo.Size = ctrFrom.Size;
                         lstTo.Name = ctrFrom.Tag.ToString() + intDoel.ToString();
                         lstTo.IntegralHeight = ((ListBox)ctrFrom).IntegralHeight;
+                        lstTo.BackColor = ((ListBox)ctrFrom).BackColor;
                         grpNew.Controls.Add(lstTo);
                         break;
 
@@ -591,8 +758,8 @@ namespace Onderwijs
             // Stap 1: Haal informatie uit de controls van het scherm:
             GroupBox grpDoel = (GroupBox)Controls["grpDoel" + intDoelVolgnummer.ToString()];
             int intDoeltype = ((RadioButton)grpDoel.Controls["btnLeerdoel" + intDoelVolgnummer.ToString()]).Checked ? 1 : 2;
-            String strOmschrijving = ((TextBox)grpDoel.Controls["txtOnderwijsdoel" + intDoelVolgnummer.ToString()]).Text;
-            String strOnderwerpen = ((TextBox)grpDoel.Controls["txtOnderwerpen" + intDoelVolgnummer.ToString()]).Text;
+            String strOmschrijving = removeSpecialChars(((TextBox)grpDoel.Controls["txtOnderwijsdoel" + intDoelVolgnummer.ToString()]).Text);
+            String strOnderwerpen = removeSpecialChars(((TextBox)grpDoel.Controls["txtOnderwerpen" + intDoelVolgnummer.ToString()]).Text);
             decimal decWeging = Convert.ToDecimal(((TextBox)grpDoel.Controls["txtWeging" + intDoelVolgnummer.ToString()]).Text);
             bool blnOnthouden = ((CheckBox)grpDoel.Controls["chkOnthouden" + intDoelVolgnummer.ToString()]).Checked;
             bool blnBegrijpen = ((CheckBox)grpDoel.Controls["chkBegrijpen" + intDoelVolgnummer.ToString()]).Checked;
@@ -735,6 +902,7 @@ namespace Onderwijs
             if (MessageBox.Show(this, "Alle wijzigingen in de onderwijsdoelen worden opgeslagen. Weet je het zeker?", "Onderwijsdoelen opslaan...", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 udsSaveDoelen();
+                blnErIsIetsGewijzigd = false;
             }
         }
 
@@ -762,6 +930,14 @@ namespace Onderwijs
             frmCursus frmModal = new frmCursus(lstToetscodes.SelectedItem.ToString());
             frmModal.ShowDialog();
 
+        }
+
+        private String removeSpecialChars(String input)
+        {
+            String output = input;
+            output = Regex.Replace(output, @"[\""'“”‘’]", "`");
+            output = Regex.Replace(output, @"[^0-9a-zA-Z,\.\(\) /><`ëé/+?:\x0A\x0D\-–;\*]", "_");
+            return output;
         }
     }
 }

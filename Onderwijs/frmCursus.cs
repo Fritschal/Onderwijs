@@ -16,6 +16,7 @@ namespace Onderwijs
         private SqlConnection cnnOnderwijs = new SqlConnection("Data Source=" + Globals.DB_SERVER + ";Initial Catalog=" + Globals.DB_NAME + ";User ID=" + Globals.DB_USER + ";Password=" + Globals.DB_PASSWORD + ";MultipleActiveResultSets=true;");
         private String strToetscode = "<onbekend>";
         private String strCursuscode = "<onbekend>";
+
         public frmCursus(String strToetscode_)
         {
             InitializeComponent();

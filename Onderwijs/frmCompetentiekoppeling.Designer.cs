@@ -100,7 +100,7 @@
             // lblININiveau
             // 
             this.lblININiveau.AutoSize = true;
-            this.lblININiveau.Location = new System.Drawing.Point(450, 10);
+            this.lblININiveau.Location = new System.Drawing.Point(449, 10);
             this.lblININiveau.Name = "lblININiveau";
             this.lblININiveau.Size = new System.Drawing.Size(101, 13);
             this.lblININiveau.TabIndex = 12;
