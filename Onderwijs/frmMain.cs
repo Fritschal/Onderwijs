@@ -102,7 +102,20 @@ namespace Onderwijs
                     }
                 }
             }
-            lstToetscodes.SelectedIndex = 0;
+            if (lstToetscodes.Items.Count > 0)
+            {
+                lstToetscodes.SelectedIndex = 0;
+            }
+            else
+            {
+                // Verwijder huidige onderwijsdoelen van het scherm:
+                for (int i = intDoel; i > 1; i--)
+                {
+                    udsRemoveDoel();
+                }
+                udsClearDoel(1);
+                blnErIsIetsGewijzigd = false;
+            }
         }
 
         private void lstToetscodes_SelectedIndexChanged(object sender, EventArgs e)
@@ -187,7 +200,7 @@ namespace Onderwijs
                 using (SqlDataReader rdrToets = cmdToets.ExecuteReader())
                 {
                     rdrToets.Read();
-            //        strCursuscode = rdrToets["Cursuscode"].ToString();
+                    //        strCursuscode = rdrToets["Cursuscode"].ToString();
                     strCursusnaam = rdrToets["Cursusnaam"].ToString();
                     strCursustype = rdrToets["Cursustype"].ToString();
                     txtBeoordelingswijze.Text = rdrToets["Beoordelingswijze"].ToString();
