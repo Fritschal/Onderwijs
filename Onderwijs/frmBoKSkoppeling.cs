@@ -17,6 +17,7 @@ namespace Onderwijs
         private int intDoelID;
         private ListViewColumnSorter lvwETColumnSorter;
         private ListViewColumnSorter lvwTIColumnSorter;
+        private bool blnErIsIetsGewijzigd = false;
 
         public frmBoKSkoppeling(int intDoelID_)
         {
@@ -155,32 +156,37 @@ namespace Onderwijs
 
         private void cmdAnnuleer_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, "Alle wijzigingen in dit scherm gaan verloren. Weet je het zeker?", "Annuleren...", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (blnErIsIetsGewijzigd)
             {
-                // Sluit het scherm zonder wijzigingen over te nemen:
-                Close();
+                if (MessageBox.Show(this, "Alle eventuele aanpassingen in dit scherm gaan verloren. Weet je het zeker?", "Annuleren...", MessageBoxButtons.YesNo) == DialogResult.No)
+                {
+                    return;
+                }
             }
+            // Sluit het scherm zonder wijzigingen over te nemen:
+            Close();
         }
 
         private void cmdAccepteer_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, "Alle wijzigingen in dit scherm worden opgeslagen. Weet je het zeker?", "Accepteren...", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(this, "Alle eventuele aanpassingen in dit scherm worden opgeslagen. Weet je het zeker?", "Accepteren...", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 int intRecordsInserted = 0;
                 int intRecordsDeleted = 0;
 
-                // Stap 1: Start een database-transactie (IsolationLevel = ReadUncommitted, zodat er al rekening gehouden wordt met verwijderde records voordat er gecommit wordt. De database zelf staat standaard op ReadCommitted en dat moet ook zo blijven.):
-                using (SqlTransaction transInsert = cnnOnderwijs.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted))
+                // Stap 1: Start een database-transactie:
+                SqlTransaction transOnderwijs = cnnOnderwijs.BeginTransaction(IsolationLevel.Serializable);
+                try
                 {
                     // Stap 2: Verwijder alle records uit tblDoelBoKSItem met betrekking tot het leerdoel.
-                    using (SqlCommand cmdDelete = new SqlCommand("DELETE FROM tblDoelBoKSItem WHERE fkDoel = " + intDoelID.ToString(), cnnOnderwijs, transInsert))
+                    using (SqlCommand cmdDelete = new SqlCommand("DELETE FROM tblDoelBoKSItem WHERE fkDoel = " + intDoelID.ToString(), cnnOnderwijs, transOnderwijs))
                     {
                         intRecordsDeleted = cmdDelete.ExecuteNonQuery();
                     }
 
                     // Stap 3: Lees de maximale pk-waarde uit tblDoelBoKSItem:
                     int intDoelBoKSItemId = 0;
-                    using (SqlCommand cmdMaxId = new SqlCommand("SELECT MAX(pkId) AS maxId FROM tblDoelBoKSItem", cnnOnderwijs, transInsert))
+                    using (SqlCommand cmdMaxId = new SqlCommand("SELECT MAX(pkId) AS maxId FROM tblDoelBoKSItem", cnnOnderwijs, transOnderwijs))
                     {
                         using (SqlDataReader rdrMaxId = cmdMaxId.ExecuteReader())
                         {
@@ -200,7 +206,7 @@ namespace Onderwijs
                         // Stap 4.1: Maak record aan voor deze ene BoKS-itemkoppeling (opleiding ET):
                         intDoelBoKSItemId++;
                         using (SqlCommand cmdInsert = new SqlCommand("INSERT INTO tblDoelBoKSItem (pkId, fkDoel, fkBoKSItem) " +
-                            "VALUES (" + intDoelBoKSItemId.ToString() + ", " + intDoelID.ToString() + ", " + itmInstance.Name.ToString() + ")", cnnOnderwijs, transInsert))
+                            "VALUES (" + intDoelBoKSItemId.ToString() + ", " + intDoelID.ToString() + ", " + itmInstance.Name.ToString() + ")", cnnOnderwijs, transOnderwijs))
                         {
                             intRecordsInserted += cmdInsert.ExecuteNonQuery();
                         }
@@ -210,15 +216,20 @@ namespace Onderwijs
                         // Stap 4.2: Maak record aan voor deze ene BoKS-itemkoppeling (opleiding TI):
                         intDoelBoKSItemId++;
                         using (SqlCommand cmdInsert = new SqlCommand("INSERT INTO tblDoelBoKSItem (pkId, fkDoel, fkBoKSItem) " +
-                            "VALUES (" + intDoelBoKSItemId.ToString() + ", " + intDoelID.ToString() + ", " + itmInstance.Name.ToString() + ")", cnnOnderwijs, transInsert))
+                            "VALUES (" + intDoelBoKSItemId.ToString() + ", " + intDoelID.ToString() + ", " + itmInstance.Name.ToString() + ")", cnnOnderwijs, transOnderwijs))
                         {
                             intRecordsInserted += cmdInsert.ExecuteNonQuery();
                         }
                     }
 
                     // Stap 5: Commit database-transactie:
-                    transInsert.Commit();
-                    MessageBox.Show("Aantal records deleted: " + intRecordsDeleted.ToString() + "\nAantal records inserted: " + intRecordsInserted.ToString(), "BoKS-items opslaan...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    transOnderwijs.Commit();
+                    MessageBox.Show("Commit:\nAantal records deleted: " + intRecordsDeleted.ToString() + "\nAantal records inserted: " + intRecordsInserted.ToString(), "BoKS-items opslaan...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch
+                {
+                    transOnderwijs.Rollback();
+                    MessageBox.Show("Rollback: Iets gaat hier niet chocotof!", "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 // Stap 6: Sluit het scherm:
@@ -280,6 +291,16 @@ namespace Onderwijs
 
             // Perform the sort with these new sort options.
             lvwTIBoKSitem.Sort();
+        }
+
+        private void lvwETBoKSitem_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            blnErIsIetsGewijzigd = true;
+        }
+
+        private void lvwTIBoKSitem_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            blnErIsIetsGewijzigd = true;
         }
     }
 }

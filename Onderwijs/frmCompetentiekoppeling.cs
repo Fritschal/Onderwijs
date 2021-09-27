@@ -1,7 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using System.ComponentModel;
+using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Onderwijs
 {
@@ -12,7 +18,9 @@ namespace Onderwijs
         private List<String> strNiveauAvC = new List<String>();
         private List<String> strNiveauMvZ = new List<String>();
         private bool blnControlsReady = false;
+        private bool blnFormLoadReady = false;
         private int intDoelID;
+        private bool blnErIsIetsGewijzigd = false;
 
         public frmCompetentiekoppeling(int intDoelID_)
         {
@@ -25,12 +33,13 @@ namespace Onderwijs
             cnnOnderwijs.Open();
             udsNiveauOmschrijvingen();
             udsCreeerTabbladen();
-            blnControlsReady=udfCreeerControls();
+            blnControlsReady = udfCreeerControls();
             udsStatischeVulling();
             if (intDoelID > 0)
             {
                 udsDynamischeVulling(intDoelID);
             }
+            blnFormLoadReady = true;
         }
 
         private void udsDynamischeVulling(int intDoelID)
@@ -144,6 +153,7 @@ namespace Onderwijs
                         lblTo.Size = ctrFrom.Size;
                         lblTo.Name = ctrFrom.Name.Substring(0, 3) + ctrParentTo.Tag.ToString() + ctrFrom.Name.Substring(6);
                         lblTo.Text = ctrFrom.Text;
+                        lblTo.Font = ctrFrom.Font;
                         ctrParentTo.Controls.Add(lblTo);
                         break;
                     case ("CheckBox"):
@@ -201,7 +211,9 @@ namespace Onderwijs
                         chklstTo.Tag = ctrFrom.Tag.ToString();
                         chklstTo.HorizontalScrollbar = ((CheckedListBox)ctrFrom).HorizontalScrollbar;
                         chklstTo.CheckOnClick = ((CheckedListBox)ctrFrom).CheckOnClick;
+                        chklstTo.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(chklstINIGedragskenmerken_ItemCheck);
                         ctrParentTo.Controls.Add(chklstTo);
+
                         break;
                     default:
                         MessageBox.Show(ctrFrom.Name, "Control niet gekopiëerd!");
@@ -273,6 +285,10 @@ namespace Onderwijs
         {
             // Eventmethode voor alle controls van het type CheckBox:
             CheckBox chkInstance = (CheckBox)sender;
+            if (blnFormLoadReady)
+            {
+                blnErIsIetsGewijzigd = true;
+            }
 
             switch (chkInstance.Tag.ToString())
             {
@@ -302,6 +318,10 @@ namespace Onderwijs
             // Eventmethode voor alle controls van het type RadioButton:
             RadioButton btnInstance = (RadioButton)sender;
             TextBox txtOmschrijving = new TextBox();
+            if (blnFormLoadReady)
+            {
+                blnErIsIetsGewijzigd = true;
+            }
 
             // Zoek textbox om niveauomschrijving te plaatsen:
             foreach (Control ctrInstance in btnInstance.Parent.Controls)
@@ -355,14 +375,18 @@ namespace Onderwijs
             }
             return intReturn;
         }
-        
+
         private void cmdAnnuleer_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this , "Alle wijzigingen in dit scherm gaan verloren. Weet je het zeker?", "Annuleren...", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (blnErIsIetsGewijzigd)
             {
-                // Sluit het scherm zonder wijzigingen over te nemen:
-                Close();
+                if (MessageBox.Show(this, "Alle eventuele aanpassingen in dit scherm gaan verloren. Weet je het zeker?", "Annuleren...", MessageBoxButtons.YesNo) == DialogResult.No)
+                {
+                    return;
+                }
             }
+            // Sluit het scherm zonder wijzigingen over te nemen:
+            Close();
         }
 
         private void cmdAccepteer_Click(object sender, EventArgs e)
@@ -372,19 +396,20 @@ namespace Onderwijs
                 int intRecordsInserted = 0;
                 int intRecordsDeleted = 0;
 
-                // Stap 1: Start een database-transactie (IsolationLevel = ReadUncommitted, zodat er al rekening gehouden wordt met verwijderde records voordat er gecommit wordt. De database zelf staat standaard op ReadCommitted en dat moet ook zo blijven.):
-                using (SqlTransaction transInsert = cnnOnderwijs.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted))
+                // Stap 1: Start een mega database-transactie:
+                SqlTransaction transOnderwijs = cnnOnderwijs.BeginTransaction(IsolationLevel.Serializable);
+                try
                 {
                     // Stap 2: Verwijder alle records uit tblDoelCompetentie met betrekking tot het leerdoel.
                     //         Vanwege Cascading Update worden alle gekoppelde gedragskenmerken automatisch verwijderd uit tblDoelCompetentieGedragskenmerken.
-                    using (SqlCommand cmdDelete = new SqlCommand("DELETE FROM tblDoelCompetentie WHERE fkDoel = " + intDoelID.ToString(), cnnOnderwijs, transInsert))
+                    using (SqlCommand cmdDelete = new SqlCommand("DELETE FROM tblDoelCompetentie WHERE fkDoel = " + intDoelID.ToString(), cnnOnderwijs, transOnderwijs))
                     {
                         intRecordsDeleted = cmdDelete.ExecuteNonQuery();
                     }
 
                     // Stap 3: Lees de maximale pk-waarde uit tblDoelCompetentie:
                     int intDoelCompetentieId = 0;
-                    using (SqlCommand cmdMaxId = new SqlCommand("SELECT MAX(pkId) AS maxId FROM tblDoelCompetentie", cnnOnderwijs, transInsert))
+                    using (SqlCommand cmdMaxId = new SqlCommand("SELECT MAX(pkId) AS maxId FROM tblDoelCompetentie", cnnOnderwijs, transOnderwijs))
                     {
                         using (SqlDataReader rdrMaxId = cmdMaxId.ExecuteReader())
                         {
@@ -408,9 +433,9 @@ namespace Onderwijs
                             int intAvTNiveauId;
                             int intAvCNiveauId;
                             int intMvZNiveauId;
-                            
+
                             // Stap 4.1: Lees van de competentie de pk-waarde uit tblCompetentie:
-                            using (SqlCommand cmdCompetentieId = new SqlCommand("SELECT pkId FROM tblCompetentie WHERE strAfkorting = '" + strCompetentieAfkorting + "'", cnnOnderwijs, transInsert))
+                            using (SqlCommand cmdCompetentieId = new SqlCommand("SELECT pkId FROM tblCompetentie WHERE strAfkorting = '" + strCompetentieAfkorting + "'", cnnOnderwijs, transOnderwijs))
                             {
                                 using (SqlDataReader rdrCompetentieId = cmdCompetentieId.ExecuteReader())
                                 {
@@ -419,10 +444,10 @@ namespace Onderwijs
                                     rdrCompetentieId.Close();
                                 }
                             }
-                            
-                            // Stap 4.2: Lees van de competentienieveaus (3x) de pk-waarde uit qryCompetentieNiveau:
+
+                            // Stap 4.2: Lees van de competentieniveaus (3x) de pk-waarde uit qryCompetentieNiveau:
                             int intAvT = intNiveau(strCompetentieAfkorting, "AvT");
-                            using (SqlCommand cmdNiveauId = new SqlCommand("SELECT pkNiveau FROM qryCompetentieNiveau WHERE Afkorting = 'AvT' AND Niveau = " + intAvT, cnnOnderwijs, transInsert))
+                            using (SqlCommand cmdNiveauId = new SqlCommand("SELECT pkNiveau FROM qryCompetentieNiveau WHERE Afkorting = 'AvT' AND Niveau = " + intAvT, cnnOnderwijs, transOnderwijs))
                             {
                                 using (SqlDataReader rdrNiveauId = cmdNiveauId.ExecuteReader())
                                 {
@@ -432,7 +457,7 @@ namespace Onderwijs
                                 }
                             }
                             int intAvC = intNiveau(strCompetentieAfkorting, "AvC");
-                            using (SqlCommand cmdNiveauId = new SqlCommand("SELECT pkNiveau FROM qryCompetentieNiveau WHERE Afkorting = 'AvC' AND Niveau = " + intAvC, cnnOnderwijs, transInsert))
+                            using (SqlCommand cmdNiveauId = new SqlCommand("SELECT pkNiveau FROM qryCompetentieNiveau WHERE Afkorting = 'AvC' AND Niveau = " + intAvC, cnnOnderwijs, transOnderwijs))
                             {
                                 using (SqlDataReader rdrNiveauId = cmdNiveauId.ExecuteReader())
                                 {
@@ -442,7 +467,7 @@ namespace Onderwijs
                                 }
                             }
                             int intMvZ = intNiveau(strCompetentieAfkorting, "MvZ");
-                            using (SqlCommand cmdNiveauId = new SqlCommand("SELECT pkNiveau FROM qryCompetentieNiveau WHERE Afkorting = 'MvZ' AND Niveau = " + intMvZ, cnnOnderwijs, transInsert))
+                            using (SqlCommand cmdNiveauId = new SqlCommand("SELECT pkNiveau FROM qryCompetentieNiveau WHERE Afkorting = 'MvZ' AND Niveau = " + intMvZ, cnnOnderwijs, transOnderwijs))
                             {
                                 using (SqlDataReader rdrNiveauId = cmdNiveauId.ExecuteReader())
                                 {
@@ -451,26 +476,26 @@ namespace Onderwijs
                                     rdrNiveauId.Close();
                                 }
                             }
-                            
+
                             // Stap 4.3: Maak record aan voor deze ene competentiekoppeling:
                             intDoelCompetentieId++;
                             using (SqlCommand cmdInsert = new SqlCommand("INSERT INTO tblDoelCompetentie (pkId, fkCompetentie, fkDoel, fkNiveauT, fkNiveauC, fkNiveauZ) " +
                                 "VALUES (" + intDoelCompetentieId.ToString() + ", " + intCompetentieId.ToString() + ", " + intDoelID.ToString() + ", " +
-                                intAvTNiveauId.ToString() + ", " + intAvCNiveauId.ToString() + ", " + intMvZNiveauId.ToString() + ")", cnnOnderwijs, transInsert))
+                                intAvTNiveauId.ToString() + ", " + intAvCNiveauId.ToString() + ", " + intMvZNiveauId.ToString() + ")", cnnOnderwijs, transOnderwijs))
                             {
                                 intRecordsInserted += cmdInsert.ExecuteNonQuery();
                             }
 
                             // Stap 4.4: Lees de maximale pk-waarde uit tblDoelCompetentieGedragskenmerk:
                             int intDoelCompetentieGedragskenmerkId = 0;
-                            using (SqlCommand cmdMaxId = new SqlCommand("SELECT MAX(pkId) AS maxId FROM tblDoelCompetentieGedragskenmerk", cnnOnderwijs, transInsert))
+                            using (SqlCommand cmdMaxId = new SqlCommand("SELECT MAX(pkId) AS maxId FROM tblDoelCompetentieGedragskenmerk", cnnOnderwijs, transOnderwijs))
                             {
                                 using (SqlDataReader rdrMaxId = cmdMaxId.ExecuteReader())
                                 {
                                     rdrMaxId.Read();
                                     if (!rdrMaxId.IsDBNull(0))
                                     {
-                                            intDoelCompetentieGedragskenmerkId = (int)rdrMaxId["maxId"];
+                                        intDoelCompetentieGedragskenmerkId = (int)rdrMaxId["maxId"];
                                     }
                                     rdrMaxId.Close();
                                 }
@@ -489,7 +514,7 @@ namespace Onderwijs
                                     String strGedragskenmerkIndex = chklstInstance.Items[intIndex].ToString().Substring(0, 1);
 
                                     // Stap 4.5.2: Lees van het gedragskenmerk de pk-waarde uit tblGedragskenmerk:
-                                    using (SqlCommand cmdGedragskenmerkId = new SqlCommand("SELECT pkId FROM tblGedragskenmerk WHERE fkCompetentie = " + intCompetentieId.ToString() + " AND strIndex = '" + strGedragskenmerkIndex + "'", cnnOnderwijs, transInsert))
+                                    using (SqlCommand cmdGedragskenmerkId = new SqlCommand("SELECT pkId FROM tblGedragskenmerk WHERE fkCompetentie = " + intCompetentieId.ToString() + " AND strIndex = '" + strGedragskenmerkIndex + "'", cnnOnderwijs, transOnderwijs))
                                     {
                                         using (SqlDataReader rdrGedragskenmerkId = cmdGedragskenmerkId.ExecuteReader())
                                         {
@@ -502,8 +527,9 @@ namespace Onderwijs
                                     // Stap 4.5.3: Maak record aan voor deze ene gedragskenmerkkoppeling:
                                     intDoelCompetentieGedragskenmerkId++;
                                     using (SqlCommand cmdInsert = new SqlCommand("INSERT INTO tblDoelCompetentieGedragskenmerk (pkId, fkGedragskenmerk, fkDoelCompetentie) " +
-                                        "VALUES (" + intDoelCompetentieGedragskenmerkId.ToString() + ", " + intGedragskenmerkId.ToString() + ", " + intDoelCompetentieId.ToString() + ")", cnnOnderwijs, transInsert))
+                                        "VALUES (" + intDoelCompetentieGedragskenmerkId.ToString() + ", " + intGedragskenmerkId.ToString() + ", " + intDoelCompetentieId.ToString() + ")", cnnOnderwijs, transOnderwijs))
                                     {
+                                        // Ter info: dit aantal wordt niet opgeteld bij het totaal omdat bij het deleten ze ook niet meegenomen worden (omdat ze door de DB zelf deleted worden middels cascading delete).
                                         int intAantalRecords = cmdInsert.ExecuteNonQuery();
                                     }
                                 }
@@ -512,12 +538,25 @@ namespace Onderwijs
                     }
 
                     // Stap 5: Commit database-transactie:
-                    transInsert.Commit();
-                    MessageBox.Show("Aantal records deleted: " + intRecordsDeleted.ToString() + "\nAantal records inserted: " + intRecordsInserted.ToString(), "Competentiekoppelingen opslaan...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    transOnderwijs.Commit();
+                    MessageBox.Show("Commit:\nAantal records deleted: " + intRecordsDeleted.ToString() + "\nAantal records inserted: " + intRecordsInserted.ToString(), "Competentiekoppelingen opslaan...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch
+                {
+                    transOnderwijs.Rollback();
+                    MessageBox.Show("Rollback: Iets gaat hier niet chocotof!", "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 // Stap 6: Sluit het scherm:
                 Close();
+            }
+        }
+
+        private void chklstINIGedragskenmerken_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (blnFormLoadReady)
+            {
+                blnErIsIetsGewijzigd = true;
             }
         }
     }

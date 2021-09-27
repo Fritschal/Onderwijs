@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.grpOnderwijsdoel = new System.Windows.Forms.GroupBox();
             this.txtOnderwijsdoel = new System.Windows.Forms.TextBox();
             this.cmdAnnuleer = new System.Windows.Forms.Button();
@@ -47,6 +48,7 @@
             this.hdrTICategorie = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hdrTIItemnummer = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hdrTIItem = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.grpOnderwijsdoel.SuspendLayout();
             this.tabBoKS.SuspendLayout();
             this.tabET.SuspendLayout();
@@ -80,6 +82,7 @@
             this.cmdAnnuleer.Size = new System.Drawing.Size(105, 30);
             this.cmdAnnuleer.TabIndex = 8;
             this.cmdAnnuleer.Text = "Annuleer";
+            this.toolTip.SetToolTip(this.cmdAnnuleer, "Sluiten zonder opslaan.");
             this.cmdAnnuleer.UseVisualStyleBackColor = true;
             this.cmdAnnuleer.Click += new System.EventHandler(this.cmdAnnuleer_Click);
             // 
@@ -90,6 +93,7 @@
             this.cmdAccepteer.Size = new System.Drawing.Size(105, 30);
             this.cmdAccepteer.TabIndex = 9;
             this.cmdAccepteer.Text = "Accepteer";
+            this.toolTip.SetToolTip(this.cmdAccepteer, "Opslaan en sluiten.");
             this.cmdAccepteer.UseVisualStyleBackColor = true;
             this.cmdAccepteer.Click += new System.EventHandler(this.cmdAccepteer_Click);
             // 
@@ -135,6 +139,7 @@
             this.lvwETBoKSitem.UseCompatibleStateImageBehavior = false;
             this.lvwETBoKSitem.View = System.Windows.Forms.View.Details;
             this.lvwETBoKSitem.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvwETBoKSitem_ColumnClick);
+            this.lvwETBoKSitem.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.lvwETBoKSitem_ItemCheck);
             // 
             // hdrET
             // 
@@ -193,6 +198,7 @@
             this.lvwTIBoKSitem.UseCompatibleStateImageBehavior = false;
             this.lvwTIBoKSitem.View = System.Windows.Forms.View.Details;
             this.lvwTIBoKSitem.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvwTIBoKSitem_ColumnClick);
+            this.lvwTIBoKSitem.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.lvwTIBoKSitem_ItemCheck);
             // 
             // hdrTI
             // 
@@ -266,5 +272,6 @@
         private System.Windows.Forms.ColumnHeader hdrTICategorie;
         private System.Windows.Forms.ColumnHeader hdrTIItemnummer;
         private System.Windows.Forms.ColumnHeader hdrTIItem;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }

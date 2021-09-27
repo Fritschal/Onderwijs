@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabCompetenties = new System.Windows.Forms.TabControl();
             this.tabINI = new System.Windows.Forms.TabPage();
             this.lblININiveau = new System.Windows.Forms.Label();
@@ -59,6 +60,8 @@
             this.cmdAnnuleer = new System.Windows.Forms.Button();
             this.grpOnderwijsdoel = new System.Windows.Forms.GroupBox();
             this.txtOnderwijsdoel = new System.Windows.Forms.TextBox();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.lblTip = new System.Windows.Forms.Label();
             this.tabCompetenties.SuspendLayout();
             this.tabINI.SuspendLayout();
             this.grpINIGedragskenmerken.SuspendLayout();
@@ -80,6 +83,7 @@
             // 
             // tabINI
             // 
+            this.tabINI.Controls.Add(this.lblTip);
             this.tabINI.Controls.Add(this.lblININiveau);
             this.tabINI.Controls.Add(this.txtININiveau);
             this.tabINI.Controls.Add(this.grpINIGedragskenmerken);
@@ -143,6 +147,7 @@
             this.chklstINIGedragskenmerken.Size = new System.Drawing.Size(572, 124);
             this.chklstINIGedragskenmerken.TabIndex = 0;
             this.chklstINIGedragskenmerken.Tag = "Gedragskenmerken";
+            this.chklstINIGedragskenmerken.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chklstINIGedragskenmerken_ItemCheck);
             // 
             // grpINIBeschrijving
             // 
@@ -426,6 +431,7 @@
             this.cmdAccepteer.Size = new System.Drawing.Size(105, 30);
             this.cmdAccepteer.TabIndex = 5;
             this.cmdAccepteer.Text = "Accepteer";
+            this.toolTip.SetToolTip(this.cmdAccepteer, "Opslaan en sluiten.");
             this.cmdAccepteer.UseVisualStyleBackColor = true;
             this.cmdAccepteer.Click += new System.EventHandler(this.cmdAccepteer_Click);
             // 
@@ -436,6 +442,7 @@
             this.cmdAnnuleer.Size = new System.Drawing.Size(105, 30);
             this.cmdAnnuleer.TabIndex = 4;
             this.cmdAnnuleer.Text = "Annuleer";
+            this.toolTip.SetToolTip(this.cmdAnnuleer, "Sluiten zonder opslaan.");
             this.cmdAnnuleer.UseVisualStyleBackColor = true;
             this.cmdAnnuleer.Click += new System.EventHandler(this.cmdAnnuleer_Click);
             // 
@@ -458,6 +465,16 @@
             this.txtOnderwijsdoel.ReadOnly = true;
             this.txtOnderwijsdoel.Size = new System.Drawing.Size(594, 61);
             this.txtOnderwijsdoel.TabIndex = 0;
+            // 
+            // lblTip
+            // 
+            this.lblTip.AutoSize = true;
+            this.lblTip.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTip.Location = new System.Drawing.Point(181, 10);
+            this.lblTip.Name = "lblTip";
+            this.lblTip.Size = new System.Drawing.Size(222, 13);
+            this.lblTip.TabIndex = 13;
+            this.lblTip.Text = "<< SELECTEREN OM TE KOPPELEN ";
             // 
             // frmCompetentiekoppeling
             // 
@@ -526,6 +543,8 @@
         private System.Windows.Forms.Button cmdAnnuleer;
         private System.Windows.Forms.GroupBox grpOnderwijsdoel;
         private System.Windows.Forms.TextBox txtOnderwijsdoel;
+        private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.Label lblTip;
     }
 }
 

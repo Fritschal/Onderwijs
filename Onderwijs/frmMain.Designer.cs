@@ -103,6 +103,18 @@
             this.txtToetsvorm = new System.Windows.Forms.TextBox();
             this.grpVakcodes = new System.Windows.Forms.GroupBox();
             this.lstCursuscodes = new System.Windows.Forms.ListBox();
+            this.grpBlokSelectie = new System.Windows.Forms.GroupBox();
+            this.btnBlok12 = new System.Windows.Forms.RadioButton();
+            this.btnBlok11 = new System.Windows.Forms.RadioButton();
+            this.btnBlok8 = new System.Windows.Forms.RadioButton();
+            this.btnBlok7 = new System.Windows.Forms.RadioButton();
+            this.btnBlok6 = new System.Windows.Forms.RadioButton();
+            this.btnBlok5 = new System.Windows.Forms.RadioButton();
+            this.btnBlok4 = new System.Windows.Forms.RadioButton();
+            this.btnBlok3 = new System.Windows.Forms.RadioButton();
+            this.btnBlok2 = new System.Windows.Forms.RadioButton();
+            this.btnBlok1 = new System.Windows.Forms.RadioButton();
+            this.btnAll = new System.Windows.Forms.RadioButton();
             this.grpToetscodes.SuspendLayout();
             this.grpDoel1.SuspendLayout();
             this.grpBediening.SuspendLayout();
@@ -123,6 +135,7 @@
             this.grpToetscode.SuspendLayout();
             this.grpToetsvorm.SuspendLayout();
             this.grpVakcodes.SuspendLayout();
+            this.grpBlokSelectie.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpToetscodes
@@ -518,7 +531,7 @@
             this.grpBediening.Size = new System.Drawing.Size(1340, 54);
             this.grpBediening.TabIndex = 13;
             this.grpBediening.TabStop = false;
-            this.grpBediening.Text = "Bediening:";
+            this.grpBediening.Text = "Doelen:";
             // 
             // txtTotaal
             // 
@@ -548,9 +561,9 @@
             this.cmdDoelenOpslaan.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.cmdDoelenOpslaan.Location = new System.Drawing.Point(116, 19);
             this.cmdDoelenOpslaan.Name = "cmdDoelenOpslaan";
-            this.cmdDoelenOpslaan.Size = new System.Drawing.Size(105, 29);
+            this.cmdDoelenOpslaan.Size = new System.Drawing.Size(114, 29);
             this.cmdDoelenOpslaan.TabIndex = 14;
-            this.cmdDoelenOpslaan.Text = "Doelen opslaan";
+            this.cmdDoelenOpslaan.Text = "Alle doelen opslaan";
             this.cmdDoelenOpslaan.UseVisualStyleBackColor = true;
             this.cmdDoelenOpslaan.Click += new System.EventHandler(this.cmdDoelenOpslaan_Click);
             // 
@@ -914,7 +927,7 @@
             this.grpVakcodes.Controls.Add(this.lstCursuscodes);
             this.grpVakcodes.Location = new System.Drawing.Point(3, 167);
             this.grpVakcodes.Name = "grpVakcodes";
-            this.grpVakcodes.Size = new System.Drawing.Size(155, 695);
+            this.grpVakcodes.Size = new System.Drawing.Size(155, 547);
             this.grpVakcodes.TabIndex = 16;
             this.grpVakcodes.TabStop = false;
             this.grpVakcodes.Text = "(1) Selecteer Module:";
@@ -925,15 +938,182 @@
             this.lstCursuscodes.IntegralHeight = false;
             this.lstCursuscodes.Location = new System.Drawing.Point(6, 19);
             this.lstCursuscodes.Name = "lstCursuscodes";
-            this.lstCursuscodes.Size = new System.Drawing.Size(142, 664);
+            this.lstCursuscodes.Size = new System.Drawing.Size(142, 512);
             this.lstCursuscodes.TabIndex = 2;
             this.lstCursuscodes.SelectedIndexChanged += new System.EventHandler(this.lstCursuscodes_SelectedIndexChanged);
+            // 
+            // grpBlokSelectie
+            // 
+            this.grpBlokSelectie.Controls.Add(this.btnBlok12);
+            this.grpBlokSelectie.Controls.Add(this.btnBlok11);
+            this.grpBlokSelectie.Controls.Add(this.btnBlok8);
+            this.grpBlokSelectie.Controls.Add(this.btnBlok7);
+            this.grpBlokSelectie.Controls.Add(this.btnBlok6);
+            this.grpBlokSelectie.Controls.Add(this.btnBlok5);
+            this.grpBlokSelectie.Controls.Add(this.btnBlok4);
+            this.grpBlokSelectie.Controls.Add(this.btnBlok3);
+            this.grpBlokSelectie.Controls.Add(this.btnBlok2);
+            this.grpBlokSelectie.Controls.Add(this.btnBlok1);
+            this.grpBlokSelectie.Controls.Add(this.btnAll);
+            this.grpBlokSelectie.Location = new System.Drawing.Point(3, 720);
+            this.grpBlokSelectie.Name = "grpBlokSelectie";
+            this.grpBlokSelectie.Size = new System.Drawing.Size(155, 141);
+            this.grpBlokSelectie.TabIndex = 17;
+            this.grpBlokSelectie.TabStop = false;
+            this.grpBlokSelectie.Text = "Blokselectie:";
+            // 
+            // btnBlok12
+            // 
+            this.btnBlok12.AutoCheck = false;
+            this.btnBlok12.AutoSize = true;
+            this.btnBlok12.Location = new System.Drawing.Point(80, 111);
+            this.btnBlok12.Name = "btnBlok12";
+            this.btnBlok12.Size = new System.Drawing.Size(37, 17);
+            this.btnBlok12.TabIndex = 10;
+            this.btnBlok12.Tag = "12";
+            this.btnBlok12.Text = "12";
+            this.btnBlok12.UseVisualStyleBackColor = true;
+            this.btnBlok12.Click += new System.EventHandler(this.blokSelectie);
+            // 
+            // btnBlok11
+            // 
+            this.btnBlok11.AutoCheck = false;
+            this.btnBlok11.AutoSize = true;
+            this.btnBlok11.Location = new System.Drawing.Point(80, 88);
+            this.btnBlok11.Name = "btnBlok11";
+            this.btnBlok11.Size = new System.Drawing.Size(37, 17);
+            this.btnBlok11.TabIndex = 9;
+            this.btnBlok11.Tag = "11";
+            this.btnBlok11.Text = "11";
+            this.btnBlok11.UseVisualStyleBackColor = true;
+            this.btnBlok11.Click += new System.EventHandler(this.blokSelectie);
+            // 
+            // btnBlok8
+            // 
+            this.btnBlok8.AutoCheck = false;
+            this.btnBlok8.AutoSize = true;
+            this.btnBlok8.Location = new System.Drawing.Point(43, 111);
+            this.btnBlok8.Name = "btnBlok8";
+            this.btnBlok8.Size = new System.Drawing.Size(31, 17);
+            this.btnBlok8.TabIndex = 8;
+            this.btnBlok8.Tag = "8";
+            this.btnBlok8.Text = "8";
+            this.btnBlok8.UseVisualStyleBackColor = true;
+            this.btnBlok8.Click += new System.EventHandler(this.blokSelectie);
+            // 
+            // btnBlok7
+            // 
+            this.btnBlok7.AutoCheck = false;
+            this.btnBlok7.AutoSize = true;
+            this.btnBlok7.Location = new System.Drawing.Point(43, 88);
+            this.btnBlok7.Name = "btnBlok7";
+            this.btnBlok7.Size = new System.Drawing.Size(31, 17);
+            this.btnBlok7.TabIndex = 7;
+            this.btnBlok7.Tag = "7";
+            this.btnBlok7.Text = "7";
+            this.btnBlok7.UseVisualStyleBackColor = true;
+            this.btnBlok7.Click += new System.EventHandler(this.blokSelectie);
+            // 
+            // btnBlok6
+            // 
+            this.btnBlok6.AutoCheck = false;
+            this.btnBlok6.AutoSize = true;
+            this.btnBlok6.Location = new System.Drawing.Point(43, 65);
+            this.btnBlok6.Name = "btnBlok6";
+            this.btnBlok6.Size = new System.Drawing.Size(31, 17);
+            this.btnBlok6.TabIndex = 6;
+            this.btnBlok6.Tag = "6";
+            this.btnBlok6.Text = "6";
+            this.btnBlok6.UseVisualStyleBackColor = true;
+            this.btnBlok6.Click += new System.EventHandler(this.blokSelectie);
+            // 
+            // btnBlok5
+            // 
+            this.btnBlok5.AutoCheck = false;
+            this.btnBlok5.AutoSize = true;
+            this.btnBlok5.Location = new System.Drawing.Point(43, 42);
+            this.btnBlok5.Name = "btnBlok5";
+            this.btnBlok5.Size = new System.Drawing.Size(31, 17);
+            this.btnBlok5.TabIndex = 5;
+            this.btnBlok5.Tag = "5";
+            this.btnBlok5.Text = "5";
+            this.btnBlok5.UseVisualStyleBackColor = true;
+            this.btnBlok5.Click += new System.EventHandler(this.blokSelectie);
+            // 
+            // btnBlok4
+            // 
+            this.btnBlok4.AutoCheck = false;
+            this.btnBlok4.AutoSize = true;
+            this.btnBlok4.Location = new System.Drawing.Point(6, 111);
+            this.btnBlok4.Name = "btnBlok4";
+            this.btnBlok4.Size = new System.Drawing.Size(31, 17);
+            this.btnBlok4.TabIndex = 4;
+            this.btnBlok4.Tag = "4";
+            this.btnBlok4.Text = "4";
+            this.btnBlok4.UseVisualStyleBackColor = true;
+            this.btnBlok4.Click += new System.EventHandler(this.blokSelectie);
+            // 
+            // btnBlok3
+            // 
+            this.btnBlok3.AutoCheck = false;
+            this.btnBlok3.AutoSize = true;
+            this.btnBlok3.Location = new System.Drawing.Point(6, 88);
+            this.btnBlok3.Name = "btnBlok3";
+            this.btnBlok3.Size = new System.Drawing.Size(31, 17);
+            this.btnBlok3.TabIndex = 3;
+            this.btnBlok3.Tag = "3";
+            this.btnBlok3.Text = "3";
+            this.btnBlok3.UseVisualStyleBackColor = true;
+            this.btnBlok3.Click += new System.EventHandler(this.blokSelectie);
+            // 
+            // btnBlok2
+            // 
+            this.btnBlok2.AutoCheck = false;
+            this.btnBlok2.AutoSize = true;
+            this.btnBlok2.Location = new System.Drawing.Point(6, 65);
+            this.btnBlok2.Name = "btnBlok2";
+            this.btnBlok2.Size = new System.Drawing.Size(31, 17);
+            this.btnBlok2.TabIndex = 2;
+            this.btnBlok2.Tag = "2";
+            this.btnBlok2.Text = "2";
+            this.btnBlok2.UseVisualStyleBackColor = true;
+            this.btnBlok2.Click += new System.EventHandler(this.blokSelectie);
+            // 
+            // btnBlok1
+            // 
+            this.btnBlok1.AutoCheck = false;
+            this.btnBlok1.AutoSize = true;
+            this.btnBlok1.Location = new System.Drawing.Point(6, 42);
+            this.btnBlok1.Name = "btnBlok1";
+            this.btnBlok1.Size = new System.Drawing.Size(31, 17);
+            this.btnBlok1.TabIndex = 1;
+            this.btnBlok1.Tag = "1";
+            this.btnBlok1.Text = "1";
+            this.btnBlok1.UseVisualStyleBackColor = true;
+            this.btnBlok1.Click += new System.EventHandler(this.blokSelectie);
+            this.btnBlok1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.blokSelectie);
+            // 
+            // btnAll
+            // 
+            this.btnAll.AutoCheck = false;
+            this.btnAll.AutoSize = true;
+            this.btnAll.Checked = true;
+            this.btnAll.Location = new System.Drawing.Point(6, 19);
+            this.btnAll.Name = "btnAll";
+            this.btnAll.Size = new System.Drawing.Size(83, 17);
+            this.btnAll.TabIndex = 0;
+            this.btnAll.TabStop = true;
+            this.btnAll.Tag = "0";
+            this.btnAll.Text = "Alle blokken";
+            this.btnAll.UseVisualStyleBackColor = true;
+            this.btnAll.Click += new System.EventHandler(this.blokSelectie);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1510, 869);
+            this.Controls.Add(this.grpBlokSelectie);
             this.Controls.Add(this.grpVakcodes);
             this.Controls.Add(this.grpToets);
             this.Controls.Add(this.grpCursus);
@@ -981,6 +1161,8 @@
             this.grpToetsvorm.ResumeLayout(false);
             this.grpToetsvorm.PerformLayout();
             this.grpVakcodes.ResumeLayout(false);
+            this.grpBlokSelectie.ResumeLayout(false);
+            this.grpBlokSelectie.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1060,5 +1242,17 @@
         private System.Windows.Forms.TextBox txtKeuzedeel;
         private System.Windows.Forms.GroupBox grpVakcodes;
         private System.Windows.Forms.ListBox lstCursuscodes;
+        private System.Windows.Forms.GroupBox grpBlokSelectie;
+        private System.Windows.Forms.RadioButton btnBlok12;
+        private System.Windows.Forms.RadioButton btnBlok11;
+        private System.Windows.Forms.RadioButton btnBlok8;
+        private System.Windows.Forms.RadioButton btnBlok7;
+        private System.Windows.Forms.RadioButton btnBlok6;
+        private System.Windows.Forms.RadioButton btnBlok5;
+        private System.Windows.Forms.RadioButton btnBlok4;
+        private System.Windows.Forms.RadioButton btnBlok3;
+        private System.Windows.Forms.RadioButton btnBlok2;
+        private System.Windows.Forms.RadioButton btnBlok1;
+        private System.Windows.Forms.RadioButton btnAll;
     }
 }

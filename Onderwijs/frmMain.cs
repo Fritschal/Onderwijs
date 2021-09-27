@@ -22,7 +22,8 @@ namespace Onderwijs
         private int intPrevCursusIndex = -1;
         private bool blnStartupReady = false;
         private bool blnErIsIetsGewijzigd = false;
-        private bool blnNeeGeantwoord = false;
+        private bool selectieGecanceld = false;
+        private int blokFilter = 0;
 
         public frmMain()
         {
@@ -48,13 +49,20 @@ namespace Onderwijs
         {
             // Cursuscodes:
             lstCursuscodes.Items.Clear();
-            using (SqlCommand cmdCursus = new SqlCommand("SELECT * FROM tblCursus ORDER BY strCode", cnnOnderwijs))
+            lstCursuscodes.ClearSelected();
+            lstToetscodes.ClearSelected();
+            String sqlStatement = "SELECT Cursuscode FROM qryCursus ORDER BY Cursuscode";
+            if (blokFilter > 0)
+            {
+                sqlStatement = "SELECT Cursuscode FROM qryBlokCursus WHERE Blok = '" + blokFilter + "'ORDER BY Cursuscode";
+            }
+            using (SqlCommand cmdCursus = new SqlCommand(sqlStatement, cnnOnderwijs))
             {
                 using (SqlDataReader rdrCursus = cmdCursus.ExecuteReader())
                 {
                     while (rdrCursus.Read())
                     {
-                        lstCursuscodes.Items.Add(rdrCursus["strCode"].ToString());
+                        lstCursuscodes.Items.Add(rdrCursus["Cursuscode"].ToString());
                     }
                 }
             }
@@ -63,8 +71,7 @@ namespace Onderwijs
 
         private void lstCursuscodes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Op dezelfde cursuscode geklikt:
-            if (lstCursuscodes.SelectedIndex == intSelectedCursusIndex)
+            if (lstCursuscodes.SelectedIndex < 0 || selectieGecanceld)
             {
                 return;
             }
@@ -72,16 +79,17 @@ namespace Onderwijs
             if (blnStartupReady && blnErIsIetsGewijzigd)
             {
                 // Alle wijzigingen van de "vorige" toetscode opgeslagen?
-                if (MessageBox.Show("Moeten er nog wijzigingen opgeslagen worden?", "Verandering van toetscode...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show("Moeten er nog wijzigingen opgeslagen worden?", "Verandering van modulecode...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     // Ga terug...
+                    selectieGecanceld = true;
                     lstCursuscodes.SelectedIndex = intSelectedCursusIndex;
-                    lstToetscodes.SelectedIndex = intSelectedToetsIndex;
+                    selectieGecanceld = false;
                     return;
                 }
                 else
                 {
-                    blnNeeGeantwoord = true;
+                    blnErIsIetsGewijzigd = false;
                 }
             }
 
@@ -92,7 +100,7 @@ namespace Onderwijs
 
             // Toetscodes:
             lstToetscodes.Items.Clear();
-            using (SqlCommand cmdToets = new SqlCommand("SELECT * FROM qryCursusToets WHERE Cursuscode = '" + strCursuscode + "' ORDER BY ToetsCode", cnnOnderwijs))
+            using (SqlCommand cmdToets = new SqlCommand("SELECT Toetscode FROM qryToets WHERE Cursuscode = '" + strCursuscode + "' ORDER BY ToetsCode", cnnOnderwijs))
             {
                 using (SqlDataReader rdrToets = cmdToets.ExecuteReader())
                 {
@@ -120,21 +128,25 @@ namespace Onderwijs
 
         private void lstToetscodes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Op dezelfde cursuscode/toetscode geklikt:
-            if (lstCursuscodes.SelectedIndex == intPrevCursusIndex && lstToetscodes.SelectedIndex == intSelectedToetsIndex)
+            if (lstToetscodes.SelectedIndex < 0 || selectieGecanceld)
             {
                 return;
             }
 
-            if (blnStartupReady && blnErIsIetsGewijzigd && !blnNeeGeantwoord)
+            if (blnStartupReady && blnErIsIetsGewijzigd)
             {
                 // Alle wijzigingen van de "vorige" toetscode opgeslagen?
-                blnNeeGeantwoord = false;
                 if (MessageBox.Show("Moeten er nog wijzigingen opgeslagen worden?", "Verandering van toetscode...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     // Ga terug...
+                    selectieGecanceld = true;
                     lstToetscodes.SelectedIndex = intSelectedToetsIndex;
+                    selectieGecanceld = false;
                     return;
+                }
+                else
+                {
+                    blnErIsIetsGewijzigd = false;
                 }
             }
 
@@ -277,7 +289,7 @@ namespace Onderwijs
             float fltECs = (float)0.0;
             bool eersteKeuzedeel = true;
             lstCursusToetsen.Items.Clear();
-            using (SqlCommand cmdCursusToets = new SqlCommand("SELECT * FROM qryCursusToets WHERE Cursuscode = '" + strCursuscode + "'", cnnOnderwijs))
+            using (SqlCommand cmdCursusToets = new SqlCommand("SELECT * FROM qryToets WHERE Cursuscode = '" + strCursuscode + "'", cnnOnderwijs))
             {
                 using (SqlDataReader rdrCursusToets = cmdCursusToets.ExecuteReader())
                 {
@@ -339,8 +351,14 @@ namespace Onderwijs
                 // Sla alle wijzigingen in het doel op:
                 int intRecordsUpdated = 0;
                 int intRecordsInserted = 0;
-                udsSaveDoel(Convert.ToInt32(((Button)sender).Name.Substring(((Button)sender).Name.Length - 1, 1)), ref intRecordsUpdated, ref intRecordsInserted);
-                MessageBox.Show("Aantal records updated: " + intRecordsUpdated.ToString() + "\nAantal records inserted: " + intRecordsInserted.ToString(), "Doelen opslaan...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (udsSaveDoel(Convert.ToInt32(((Button)sender).Name.Substring(((Button)sender).Name.Length - 1, 1)), ref intRecordsUpdated, ref intRecordsInserted) > 0)
+                {
+                    MessageBox.Show("Aantal records updated: " + intRecordsUpdated.ToString() + "\nAantal records inserted: " + intRecordsInserted.ToString(), "Doelen opslaan...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Iets gaat hier niet chocotof!", "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -542,15 +560,25 @@ namespace Onderwijs
             {
                 // Verwijder onderwijsdoel uit de database (alléén het onderste doel op het scherm kan deleted worden).
                 // Door de cascading delete (referentiële integriteit) worden alle gerelateerde records (competentiekoppelingen, BoKS-koppelingen) ook verwijderd.
-                using (SqlCommand cmdDelete = new SqlCommand("DELETE FROM tblDoel WHERE pkId = " + intDoelToDeleteId.ToString(), cnnOnderwijs))
+                SqlTransaction transOnderwijs = cnnOnderwijs.BeginTransaction(IsolationLevel.Serializable);
+                try
                 {
-                    //MessageBox.Show("Doel met ID = " + intDoelToDeleteId.ToString() + " wordt verwijderd!");
-                    int intAantalRecords = cmdDelete.ExecuteNonQuery();
-                    intRecordsDeleted += intAantalRecords;
+                    using (SqlCommand cmdDelete = new SqlCommand("DELETE FROM tblDoel WHERE pkId = " + intDoelToDeleteId.ToString(), cnnOnderwijs, transOnderwijs))
+                    {
+                        //MessageBox.Show("Doel met ID = " + intDoelToDeleteId.ToString() + " wordt verwijderd!");
+                        int intAantalRecords = cmdDelete.ExecuteNonQuery();
+                        intRecordsDeleted += intAantalRecords;
+                    }
+                    transOnderwijs.Commit();
+                    MessageBox.Show("Aantal records verwijderd: " + intRecordsDeleted.ToString(), "Doel verwijderen...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch
+                {
+                    transOnderwijs.Rollback();
+                    MessageBox.Show("Iets gaat hier niet chocotof!", "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             udsRemoveDoel();
-            MessageBox.Show("Aantal records verwijderd: " + intRecordsDeleted.ToString(), "Doel verwijderen...", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void udsClearDoel(int intDoelVolgnummer)
@@ -754,7 +782,7 @@ namespace Onderwijs
             return intDoelId;
         }
 
-        private void udsSaveDoel(int intDoelVolgnummer, ref int refRecordsUpdated, ref int refRecordsInserted)
+        private int udsSaveDoel(int intDoelVolgnummer, ref int refRecordsUpdated, ref int refRecordsInserted)
         {
             // Sla de gegevens van het doel met intOnderwijsdoelId (primary key) op in de database.
             // Ter info: de competentie- en BoKS-koppelingen worden NIET opgeslagen. Dat is al eerder gebeurd.
@@ -763,10 +791,6 @@ namespace Onderwijs
             int intToetsId = 0;
             int intRecordsUpdated = 0;
             int intRecordsInserted = 0;
-
-            /*
-             LET OP: HIERONDER MOET NOG GECONTROLEERD WORDEN OP SQL-TEKENS (strOmschrijving EN strOnderwerpen) DIE DE BOEL KUNNEN LATEN CRASHEN!
-             */
 
             // Stap 1: Haal informatie uit de controls van het scherm:
             GroupBox grpDoel = (GroupBox)Controls["grpDoel" + intDoelVolgnummer.ToString()];
@@ -783,12 +807,13 @@ namespace Onderwijs
 
             // Stap 2: haal ToetsId op uit de database:
             String strToetscode = lstToetscodes.SelectedItem.ToString();
-            using (SqlCommand cmdToetscode = new SqlCommand("SELECT pkId FROM tblToets WHERE strCode = '" + strToetscode + "'", cnnOnderwijs))
+            String strCursuscode = lstCursuscodes.SelectedItem.ToString();
+            using (SqlCommand cmdToetscode = new SqlCommand("SELECT ToetsId FROM qryToets WHERE Toetscode = '" + strToetscode + "' AND Cursuscode = '" + strCursuscode + "'", cnnOnderwijs))
             {
                 using (SqlDataReader rdrToetscode = cmdToetscode.ExecuteReader())
                 {
                     rdrToetscode.Read();
-                    intToetsId = Convert.ToInt32(rdrToetscode["pkId"]);
+                    intToetsId = Convert.ToInt32(rdrToetscode["ToetsId"]);
                 }
             }
 
@@ -796,22 +821,32 @@ namespace Onderwijs
             {
                 // A: Het doel bestaat al in de database.
                 // Stap 3a: Het record wordt geüpdated:
-                using (SqlCommand cmdUpdate = new SqlCommand("UPDATE tblDoel SET " +
-                    "fkDoeltype = " + intDoeltype + ", " +
-                    "strOmschrijving = '" + strOmschrijving + "', " +
-                    "strOnderwerpen = '" + strOnderwerpen + "', " +
-                    "decWeging = " + decWeging.ToString() + ", " +
-                    "blnOnthouden = " + (blnOnthouden ? 1 : 0) + ", " +
-                    "blnBegrijpen = " + (blnBegrijpen ? 1 : 0) + ", " +
-                    "blnToepassen = " + (blnToepassen ? 1 : 0) + ", " +
-                    "blnAnalyseren = " + (blnAnalyseren ? 1 : 0) + ", " +
-                    "blnEvalueren = " + (blnEvalueren ? 1 : 0) + ", " +
-                    "blnCreeren = " + (blnCreeren ? 1 : 0) +
-                    " WHERE pkId = " + intOnderwijsdoelId.ToString(), cnnOnderwijs))
+                SqlTransaction transOnderwijs = cnnOnderwijs.BeginTransaction(IsolationLevel.Serializable);
+                try
                 {
-                    //MessageBox.Show(cmdUpdate.CommandText);
-                    int intAantalRecords = cmdUpdate.ExecuteNonQuery();
-                    intRecordsUpdated += intAantalRecords;
+                    using (SqlCommand cmdUpdate = new SqlCommand("UPDATE tblDoel SET " +
+                        "fkDoeltype = " + intDoeltype + ", " +
+                        "strOmschrijving = '" + strOmschrijving + "', " +
+                        "strOnderwerpen = '" + strOnderwerpen + "', " +
+                        "decWeging = " + decWeging.ToString() + ", " +
+                        "blnOnthouden = " + (blnOnthouden ? 1 : 0) + ", " +
+                        "blnBegrijpen = " + (blnBegrijpen ? 1 : 0) + ", " +
+                        "blnToepassen = " + (blnToepassen ? 1 : 0) + ", " +
+                        "blnAnalyseren = " + (blnAnalyseren ? 1 : 0) + ", " +
+                        "blnEvalueren = " + (blnEvalueren ? 1 : 0) + ", " +
+                        "blnCreeren = " + (blnCreeren ? 1 : 0) +
+                        " WHERE pkId = " + intOnderwijsdoelId.ToString(), cnnOnderwijs, transOnderwijs))
+                    {
+                        //MessageBox.Show(cmdUpdate.CommandText);
+                        int intAantalRecords = cmdUpdate.ExecuteNonQuery();
+                        intRecordsUpdated += intAantalRecords;
+                    }
+                    transOnderwijs.Commit();
+                }
+                catch
+                {
+                    transOnderwijs.Rollback();
+                    return -1;
                 }
             }
             else
@@ -819,46 +854,55 @@ namespace Onderwijs
                 // B: Het doel is nieuw.
                 // Stap 3b: Lees de maximale pk-waarde uit tblDoel en hoog deze met één op. Dit is de primary key van het nieuwe record:
                 int intMaxId = 0;
-                using (SqlCommand cmdMaxId = new SqlCommand("SELECT MAX(pkId) AS maxId FROM tblDoel", cnnOnderwijs))
+                SqlTransaction transOnderwijs = cnnOnderwijs.BeginTransaction(IsolationLevel.Serializable);
+                try
                 {
-                    using (SqlDataReader rdrMaxId = cmdMaxId.ExecuteReader())
+                    using (SqlCommand cmdMaxId = new SqlCommand("SELECT MAX(pkId) AS maxId FROM tblDoel", cnnOnderwijs, transOnderwijs))
                     {
-                        rdrMaxId.Read();
-                        if (!rdrMaxId.IsDBNull(0))
+                        using (SqlDataReader rdrMaxId = cmdMaxId.ExecuteReader())
                         {
-                            intMaxId = (int)rdrMaxId["maxId"];
+                            rdrMaxId.Read();
+                            if (!rdrMaxId.IsDBNull(0))
+                            {
+                                intMaxId = (int)rdrMaxId["maxId"];
+                            }
+                            rdrMaxId.Close();
                         }
-                        rdrMaxId.Close();
                     }
-                }
-                intMaxId++;
+                    intMaxId++;
 
-                // Stap 4b: Er wordt een nieuwe record aangemaakt:
-                using (SqlCommand cmdInsert = new SqlCommand("INSERT INTO tblDoel (pkId, fkDoeltype, fkToets, strOmschrijving, strOnderwerpen, decWeging, blnOnthouden, blnBegrijpen, blnToepassen, blnAnalyseren, blnEvalueren, blnCreeren) " +
-                    "VALUES (" +
-                    intMaxId.ToString() + ", " +
-                    intDoeltype.ToString() + ", " +
-                    intToetsId.ToString() + ", '" +
-                    strOmschrijving + "', '" +
-                    strOnderwerpen + "', " +
-                    decWeging.ToString() + ", " +
-                    (blnOnthouden ? 1 : 0) + ", " +
-                    (blnBegrijpen ? 1 : 0) + ", " +
-                    (blnToepassen ? 1 : 0) + ", " +
-                    (blnAnalyseren ? 1 : 0) + ", " +
-                    (blnEvalueren ? 1 : 0) + ", " +
-                    (blnCreeren ? 1 : 0) + ")", cnnOnderwijs))
+                    // Stap 4b: Er wordt een nieuwe record aangemaakt:
+                    using (SqlCommand cmdInsert = new SqlCommand("INSERT INTO tblDoel (pkId, fkDoeltype, fkToets, strOmschrijving, strOnderwerpen, decWeging, blnOnthouden, blnBegrijpen, blnToepassen, blnAnalyseren, blnEvalueren, blnCreeren) " +
+                        "VALUES (" +
+                        intMaxId.ToString() + ", " +
+                        intDoeltype.ToString() + ", " +
+                        intToetsId.ToString() + ", '" +
+                        strOmschrijving + "', '" +
+                        strOnderwerpen + "', " +
+                        decWeging.ToString() + ", " +
+                        (blnOnthouden ? 1 : 0) + ", " +
+                        (blnBegrijpen ? 1 : 0) + ", " +
+                        (blnToepassen ? 1 : 0) + ", " +
+                        (blnAnalyseren ? 1 : 0) + ", " +
+                        (blnEvalueren ? 1 : 0) + ", " +
+                        (blnCreeren ? 1 : 0) + ")", cnnOnderwijs, transOnderwijs))
+                    {
+                        int intAantalRecords = cmdInsert.ExecuteNonQuery();
+                        intRecordsInserted += intAantalRecords;
+                    }
+                    transOnderwijs.Commit();
+                }
+                catch
                 {
-                    //MessageBox.Show(cmdInsert.CommandText);
-                    int intAantalRecords = cmdInsert.ExecuteNonQuery();
-                    intRecordsInserted += intAantalRecords;
+                    transOnderwijs.Rollback();
+                    return -2;
                 }
-
-                // Sap 5b: Toon het doel-id (is de primary key) in het form:
+                // Stap 5b: Toon het doel-id (is de primary key) in het form:
                 ((Label)grpDoel.Controls["lblDoelId" + intDoelVolgnummer.ToString()]).Text = "(Id=" + intMaxId.ToString() + ")";
             }
             refRecordsUpdated += intRecordsUpdated;
             refRecordsInserted += intRecordsInserted;
+            return 1;
         }
 
         private void udsSaveDoelen()
@@ -869,7 +913,10 @@ namespace Onderwijs
             int intRecordsInserted = 0;
             for (int i = 1; i <= intDoel; i++)
             {
-                udsSaveDoel(i, ref intRecordsUpdated, ref intRecordsInserted);
+                if (udsSaveDoel(i, ref intRecordsUpdated, ref intRecordsInserted) < 0)
+                {
+                    MessageBox.Show("Iets gaat hier niet chocotof!", "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             MessageBox.Show("Aantal records updated: " + intRecordsUpdated.ToString() + "\nAantal records inserted: " + intRecordsInserted.ToString(), "Doelen opslaan...", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -912,7 +959,7 @@ namespace Onderwijs
 
         private void cmdDoelenOpslaan_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, "Alle wijzigingen in de onderwijsdoelen worden opgeslagen. Weet je het zeker?", "Onderwijsdoelen opslaan...", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(this, "Alle bovenstaande onderwijsdoelen worden opgeslagen. Weet je het zeker?", "Onderwijsdoelen opslaan...", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 udsSaveDoelen();
                 blnErIsIetsGewijzigd = false;
@@ -951,6 +998,33 @@ namespace Onderwijs
             output = Regex.Replace(output, @"[\""'“”‘’]", "`");
             output = Regex.Replace(output, @"[^0-9a-zA-Z,\.\(\) /><`ëé/+?:\x0A\x0D\-–;\*]", "_");
             return output;
+        }
+
+        private void blokSelectie(object sender, EventArgs e)
+        {
+            RadioButton radiobutton = (RadioButton)sender;
+            if (!radiobutton.Checked)
+            {
+                if (blnStartupReady && blnErIsIetsGewijzigd)
+                {
+                    // Alle wijzigingen van de "vorige" toetscode opgeslagen?
+                    if (MessageBox.Show("Moeten er nog wijzigingen opgeslagen worden?", "Blokselectie...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        // Cancel...
+                        return;
+                    }
+                }
+                foreach (RadioButton rbInstance in grpBlokSelectie.Controls)
+                {
+                    rbInstance.Checked = false;
+                }
+                radiobutton.Checked = true;
+                blokFilter = Convert.ToInt32(radiobutton.Tag);
+                blnErIsIetsGewijzigd = false;
+
+                // Modulecodes opnieuw in lijst plaatsen:
+                udsStatischeVulling();
+            }
         }
     }
 }
