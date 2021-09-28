@@ -55,7 +55,6 @@
             this.chkToepassen1 = new System.Windows.Forms.CheckBox();
             this.chkBegrijpen1 = new System.Windows.Forms.CheckBox();
             this.chkOnthouden1 = new System.Windows.Forms.CheckBox();
-            this.cmdClear1 = new System.Windows.Forms.Button();
             this.cmdDelete1 = new System.Windows.Forms.Button();
             this.lblOnderwerpen1 = new System.Windows.Forms.Label();
             this.lblOmschrijving1 = new System.Windows.Forms.Label();
@@ -193,7 +192,6 @@
             this.grpDoel1.Controls.Add(this.chkToepassen1);
             this.grpDoel1.Controls.Add(this.chkBegrijpen1);
             this.grpDoel1.Controls.Add(this.chkOnthouden1);
-            this.grpDoel1.Controls.Add(this.cmdClear1);
             this.grpDoel1.Controls.Add(this.cmdDelete1);
             this.grpDoel1.Controls.Add(this.lblOnderwerpen1);
             this.grpDoel1.Controls.Add(this.lblOmschrijving1);
@@ -450,18 +448,6 @@
             this.chkOnthouden1.Text = "Onthouden";
             this.chkOnthouden1.UseVisualStyleBackColor = true;
             this.chkOnthouden1.CheckedChanged += new System.EventHandler(this.chkGeneral_CheckedChanged);
-            // 
-            // cmdClear1
-            // 
-            this.cmdClear1.Location = new System.Drawing.Point(385, 48);
-            this.cmdClear1.Name = "cmdClear1";
-            this.cmdClear1.Size = new System.Drawing.Size(105, 29);
-            this.cmdClear1.TabIndex = 15;
-            this.cmdClear1.Tag = "cmdClear";
-            this.cmdClear1.Text = "Doel wissen";
-            this.cmdClear1.UseVisualStyleBackColor = true;
-            this.cmdClear1.Visible = false;
-            this.cmdClear1.Click += new System.EventHandler(this.cmdClear_Click);
             // 
             // cmdDelete1
             // 
@@ -1125,6 +1111,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Onderwijs ET/TI";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.grpToetscodes.ResumeLayout(false);
             this.grpDoel1.ResumeLayout(false);
@@ -1177,7 +1164,6 @@
         private System.Windows.Forms.Label lblOmschrijving1;
         private System.Windows.Forms.Button cmdAdd;
         private System.Windows.Forms.Button cmdDelete1;
-        private System.Windows.Forms.Button cmdClear1;
         private System.Windows.Forms.CheckBox chkCreeren1;
         private System.Windows.Forms.CheckBox chkEvalueren1;
         private System.Windows.Forms.CheckBox chkAnalyseren1;

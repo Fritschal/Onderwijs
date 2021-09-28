@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace Onderwijs
 {
@@ -173,13 +174,17 @@ namespace Onderwijs
             {
                 int intRecordsInserted = 0;
                 int intRecordsDeleted = 0;
+                String strQuery1 = "";
+                String strQuery2 = "";
+                String strQuery3 = "";
 
                 // Stap 1: Start een database-transactie:
                 SqlTransaction transOnderwijs = cnnOnderwijs.BeginTransaction(IsolationLevel.Serializable);
                 try
                 {
                     // Stap 2: Verwijder alle records uit tblDoelBoKSItem met betrekking tot het leerdoel.
-                    using (SqlCommand cmdDelete = new SqlCommand("DELETE FROM tblDoelBoKSItem WHERE fkDoel = " + intDoelID.ToString(), cnnOnderwijs, transOnderwijs))
+                    strQuery1 = "DELETE FROM tblDoelBoKSItem WHERE fkDoel = " + intDoelID.ToString();
+                    using (SqlCommand cmdDelete = new SqlCommand(strQuery1, cnnOnderwijs, transOnderwijs))
                     {
                         intRecordsDeleted = cmdDelete.ExecuteNonQuery();
                     }
@@ -205,8 +210,9 @@ namespace Onderwijs
                     {
                         // Stap 4.1: Maak record aan voor deze ene BoKS-itemkoppeling (opleiding ET):
                         intDoelBoKSItemId++;
-                        using (SqlCommand cmdInsert = new SqlCommand("INSERT INTO tblDoelBoKSItem (pkId, fkDoel, fkBoKSItem) " +
-                            "VALUES (" + intDoelBoKSItemId.ToString() + ", " + intDoelID.ToString() + ", " + itmInstance.Name.ToString() + ")", cnnOnderwijs, transOnderwijs))
+                        strQuery2 = "INSERT INTO tblDoelBoKSItem (pkId, fkDoel, fkBoKSItem) " +
+                            "VALUES (" + intDoelBoKSItemId.ToString() + ", " + intDoelID.ToString() + ", " + itmInstance.Name.ToString() + ")";
+                        using (SqlCommand cmdInsert = new SqlCommand(strQuery2, cnnOnderwijs, transOnderwijs))
                         {
                             intRecordsInserted += cmdInsert.ExecuteNonQuery();
                         }
@@ -215,8 +221,9 @@ namespace Onderwijs
                     {
                         // Stap 4.2: Maak record aan voor deze ene BoKS-itemkoppeling (opleiding TI):
                         intDoelBoKSItemId++;
-                        using (SqlCommand cmdInsert = new SqlCommand("INSERT INTO tblDoelBoKSItem (pkId, fkDoel, fkBoKSItem) " +
-                            "VALUES (" + intDoelBoKSItemId.ToString() + ", " + intDoelID.ToString() + ", " + itmInstance.Name.ToString() + ")", cnnOnderwijs, transOnderwijs))
+                        strQuery3 = "INSERT INTO tblDoelBoKSItem (pkId, fkDoel, fkBoKSItem) " +
+                            "VALUES (" + intDoelBoKSItemId.ToString() + ", " + intDoelID.ToString() + ", " + itmInstance.Name.ToString() + ")";
+                        using (SqlCommand cmdInsert = new SqlCommand(strQuery3, cnnOnderwijs, transOnderwijs))
                         {
                             intRecordsInserted += cmdInsert.ExecuteNonQuery();
                         }
@@ -224,11 +231,17 @@ namespace Onderwijs
 
                     // Stap 5: Commit database-transactie:
                     transOnderwijs.Commit();
+                    Program.logMessage("Commit 1/3: " + Program.removeSpecialChars(strQuery1), cnnOnderwijs);
+                    Program.logMessage("Commit 2/3: " + Program.removeSpecialChars(strQuery2), cnnOnderwijs);
+                    Program.logMessage("Commit 3/3: " + Program.removeSpecialChars(strQuery3), cnnOnderwijs);
                     MessageBox.Show("Commit:\nAantal records deleted: " + intRecordsDeleted.ToString() + "\nAantal records inserted: " + intRecordsInserted.ToString(), "BoKS-items opslaan...", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch
                 {
                     transOnderwijs.Rollback();
+                    Program.logMessage("Rollback 1/3: " + Program.removeSpecialChars(strQuery1), cnnOnderwijs);
+                    Program.logMessage("Rollback 2/3: " + Program.removeSpecialChars(strQuery2), cnnOnderwijs);
+                    Program.logMessage("Rollback 3/3: " + Program.removeSpecialChars(strQuery3), cnnOnderwijs);
                     MessageBox.Show("Rollback: Iets gaat hier niet chocotof!", "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 

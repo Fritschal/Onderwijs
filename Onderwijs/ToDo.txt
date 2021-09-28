@@ -1,10 +1,7 @@
 ﻿Hoofdonderdelen:
-- Cursus-formulier (alleen toevoegen en markeren voor delete)
 - Historie/Versiebeheer?
-- Logging van Queries?
 
 Hoofdscherm:
-- Checken op SQL-insertions...
 
 Competentiekoppeling-formulier:
 - 

@@ -33,6 +33,7 @@ namespace Onderwijs
         private void frmMain_Load(object sender, EventArgs e)
         {
             cnnOnderwijs.Open();
+            Program.logMessage("Applicatie gestart.", cnnOnderwijs);
             udsStatischeVulling();
             blnStartupReady = true;
         }
@@ -165,7 +166,7 @@ namespace Onderwijs
             String strToetscode = lstToetscodes.SelectedItem.ToString();
             String strCursuscode = lstCursuscodes.SelectedItem.ToString();
             int intDoelTeller = 0;
-            using (SqlCommand cmdOnderwijsdoel = new SqlCommand("SELECT * FROM qryDoel WHERE Toetscode = '" + strToetscode + "' AND Cursuscode = '" + strCursuscode + "' ORDER BY DoelId", cnnOnderwijs))
+            using (SqlCommand cmdOnderwijsdoel = new SqlCommand("SELECT * FROM qryDoel WHERE Toetscode = '" + strToetscode + "' AND Cursuscode = '" + strCursuscode + "' AND Verwijderd = 0 ORDER BY DoelId", cnnOnderwijs))
             {
                 using (SqlDataReader rdrOnderwijsdoel = cmdOnderwijsdoel.ExecuteReader())
                 {
@@ -331,7 +332,7 @@ namespace Onderwijs
 
             if (intDoelId > 0)
             {
-                if (MessageBox.Show(this, "Het onderwijsdoel wordt verwijderd (óók uit de database). Weet je het zeker?", "Onderwijsdoel verwijderen...", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(this, "Het onderwijsdoel wordt verwijderd. Weet je het zeker?", "Onderwijsdoel verwijderen...", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     // Verwijder het (onderste) onderwijsdoel:
                     udsDeleteDoel(intDoelId);
@@ -360,13 +361,6 @@ namespace Onderwijs
                     MessageBox.Show("Iets gaat hier niet chocotof!", "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-        }
-
-        private void cmdClear_Click(object sender, EventArgs e)
-        {
-            /*
-            udsClearDoel(Convert.ToInt32(((Button)sender).Name.Substring(((Button)sender).Name.Length - 1, 1)));
-            */
         }
 
         private void cmdBoKS_Click(object sender, EventArgs e)
@@ -457,9 +451,6 @@ namespace Onderwijs
                         {
                             case ("cmdDelete"):
                                 cmdTo.Click += new System.EventHandler(cmdDelete_Click);
-                                break;
-                            case ("cmdClear"):
-                                cmdTo.Click += new System.EventHandler(cmdClear_Click);
                                 break;
                             case ("cmdBoKS"):
                                 cmdTo.Click += new System.EventHandler(cmdBoKS_Click);
@@ -560,21 +551,32 @@ namespace Onderwijs
             {
                 // Verwijder onderwijsdoel uit de database (alléén het onderste doel op het scherm kan deleted worden).
                 // Door de cascading delete (referentiële integriteit) worden alle gerelateerde records (competentiekoppelingen, BoKS-koppelingen) ook verwijderd.
+
+                /*************************
+                 * 
+                 * Aanpassing 2021-09-28: DELETE-query vervangen voor blnMarkedForDelition = true
+                 * 
+                 *************************/
+
+
+                //String strQuery = "DELETE FROM tblDoel WHERE pkId = " + intDoelToDeleteId.ToString();
+                String strQuery = "UPDATE tblDoel SET blnMarkedForDeletion = 1 WHERE pkId = " + intDoelToDeleteId.ToString();
                 SqlTransaction transOnderwijs = cnnOnderwijs.BeginTransaction(IsolationLevel.Serializable);
                 try
                 {
-                    using (SqlCommand cmdDelete = new SqlCommand("DELETE FROM tblDoel WHERE pkId = " + intDoelToDeleteId.ToString(), cnnOnderwijs, transOnderwijs))
+                    using (SqlCommand cmdDelete = new SqlCommand(strQuery, cnnOnderwijs, transOnderwijs))
                     {
-                        //MessageBox.Show("Doel met ID = " + intDoelToDeleteId.ToString() + " wordt verwijderd!");
                         int intAantalRecords = cmdDelete.ExecuteNonQuery();
                         intRecordsDeleted += intAantalRecords;
                     }
                     transOnderwijs.Commit();
-                    MessageBox.Show("Aantal records verwijderd: " + intRecordsDeleted.ToString(), "Doel verwijderen...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Program.logMessage("Commit: " + Program.removeSpecialChars(strQuery), cnnOnderwijs);
+                    MessageBox.Show("Aantal records gemarkeerd als verwijderd: " + intRecordsDeleted.ToString(), "Doel verwijderen...", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch
                 {
                     transOnderwijs.Rollback();
+                    Program.logMessage("Rollback: " + Program.removeSpecialChars(strQuery), cnnOnderwijs);
                     MessageBox.Show("Iets gaat hier niet chocotof!", "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -791,12 +793,13 @@ namespace Onderwijs
             int intToetsId = 0;
             int intRecordsUpdated = 0;
             int intRecordsInserted = 0;
+            String strQuery = "";
 
             // Stap 1: Haal informatie uit de controls van het scherm:
             GroupBox grpDoel = (GroupBox)Controls["grpDoel" + intDoelVolgnummer.ToString()];
             int intDoeltype = ((RadioButton)grpDoel.Controls["btnLeerdoel" + intDoelVolgnummer.ToString()]).Checked ? 1 : 2;
-            String strOmschrijving = removeSpecialChars(((TextBox)grpDoel.Controls["txtOnderwijsdoel" + intDoelVolgnummer.ToString()]).Text);
-            String strOnderwerpen = removeSpecialChars(((TextBox)grpDoel.Controls["txtOnderwerpen" + intDoelVolgnummer.ToString()]).Text);
+            String strOmschrijving = Program.removeSpecialChars(((TextBox)grpDoel.Controls["txtOnderwijsdoel" + intDoelVolgnummer.ToString()]).Text);
+            String strOnderwerpen = Program.removeSpecialChars(((TextBox)grpDoel.Controls["txtOnderwerpen" + intDoelVolgnummer.ToString()]).Text);
             decimal decWeging = Convert.ToDecimal(((TextBox)grpDoel.Controls["txtWeging" + intDoelVolgnummer.ToString()]).Text);
             bool blnOnthouden = ((CheckBox)grpDoel.Controls["chkOnthouden" + intDoelVolgnummer.ToString()]).Checked;
             bool blnBegrijpen = ((CheckBox)grpDoel.Controls["chkBegrijpen" + intDoelVolgnummer.ToString()]).Checked;
@@ -821,10 +824,7 @@ namespace Onderwijs
             {
                 // A: Het doel bestaat al in de database.
                 // Stap 3a: Het record wordt geüpdated:
-                SqlTransaction transOnderwijs = cnnOnderwijs.BeginTransaction(IsolationLevel.Serializable);
-                try
-                {
-                    using (SqlCommand cmdUpdate = new SqlCommand("UPDATE tblDoel SET " +
+                strQuery = "UPDATE tblDoel SET " +
                         "fkDoeltype = " + intDoeltype + ", " +
                         "strOmschrijving = '" + strOmschrijving + "', " +
                         "strOnderwerpen = '" + strOnderwerpen + "', " +
@@ -835,17 +835,23 @@ namespace Onderwijs
                         "blnAnalyseren = " + (blnAnalyseren ? 1 : 0) + ", " +
                         "blnEvalueren = " + (blnEvalueren ? 1 : 0) + ", " +
                         "blnCreeren = " + (blnCreeren ? 1 : 0) +
-                        " WHERE pkId = " + intOnderwijsdoelId.ToString(), cnnOnderwijs, transOnderwijs))
+                        " WHERE pkId = " + intOnderwijsdoelId.ToString();
+                SqlTransaction transOnderwijs = cnnOnderwijs.BeginTransaction(IsolationLevel.Serializable);
+                try
+                {
+                    using (SqlCommand cmdUpdate = new SqlCommand(strQuery, cnnOnderwijs, transOnderwijs))
                     {
                         //MessageBox.Show(cmdUpdate.CommandText);
                         int intAantalRecords = cmdUpdate.ExecuteNonQuery();
                         intRecordsUpdated += intAantalRecords;
                     }
                     transOnderwijs.Commit();
+                    Program.logMessage("Commit: " + Program.removeSpecialChars(strQuery), cnnOnderwijs);
                 }
                 catch
                 {
                     transOnderwijs.Rollback();
+                    Program.logMessage("Rollback: " + Program.removeSpecialChars(strQuery), cnnOnderwijs);
                     return -1;
                 }
             }
@@ -872,7 +878,7 @@ namespace Onderwijs
                     intMaxId++;
 
                     // Stap 4b: Er wordt een nieuwe record aangemaakt:
-                    using (SqlCommand cmdInsert = new SqlCommand("INSERT INTO tblDoel (pkId, fkDoeltype, fkToets, strOmschrijving, strOnderwerpen, decWeging, blnOnthouden, blnBegrijpen, blnToepassen, blnAnalyseren, blnEvalueren, blnCreeren) " +
+                    strQuery = "INSERT INTO tblDoel (pkId, fkDoeltype, fkToets, strOmschrijving, strOnderwerpen, decWeging, blnOnthouden, blnBegrijpen, blnToepassen, blnAnalyseren, blnEvalueren, blnCreeren) " +
                         "VALUES (" +
                         intMaxId.ToString() + ", " +
                         intDoeltype.ToString() + ", " +
@@ -885,16 +891,19 @@ namespace Onderwijs
                         (blnToepassen ? 1 : 0) + ", " +
                         (blnAnalyseren ? 1 : 0) + ", " +
                         (blnEvalueren ? 1 : 0) + ", " +
-                        (blnCreeren ? 1 : 0) + ")", cnnOnderwijs, transOnderwijs))
+                        (blnCreeren ? 1 : 0) + ")";
+                    using (SqlCommand cmdInsert = new SqlCommand(strQuery, cnnOnderwijs, transOnderwijs))
                     {
                         int intAantalRecords = cmdInsert.ExecuteNonQuery();
                         intRecordsInserted += intAantalRecords;
                     }
                     transOnderwijs.Commit();
+                    Program.logMessage("Commit: " + Program.removeSpecialChars(strQuery), cnnOnderwijs);
                 }
                 catch
                 {
                     transOnderwijs.Rollback();
+                    Program.logMessage("Rollback: " + Program.removeSpecialChars(strQuery), cnnOnderwijs);
                     return -2;
                 }
                 // Stap 5b: Toon het doel-id (is de primary key) in het form:
@@ -992,14 +1001,6 @@ namespace Onderwijs
 
         }
 
-        private String removeSpecialChars(String input)
-        {
-            String output = input;
-            output = Regex.Replace(output, @"[\""'“”‘’]", "`");
-            output = Regex.Replace(output, @"[^0-9a-zA-Z,\.\(\) /><`ëé/+?:\x0A\x0D\-–;\*]", "_");
-            return output;
-        }
-
         private void blokSelectie(object sender, EventArgs e)
         {
             RadioButton radiobutton = (RadioButton)sender;
@@ -1025,6 +1026,11 @@ namespace Onderwijs
                 // Modulecodes opnieuw in lijst plaatsen:
                 udsStatischeVulling();
             }
+        }
+
+        private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Program.logMessage("Applicatie gestopt.", cnnOnderwijs);
         }
     }
 }

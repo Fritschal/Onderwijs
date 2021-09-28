@@ -395,6 +395,9 @@ namespace Onderwijs
             {
                 int intRecordsInserted = 0;
                 int intRecordsDeleted = 0;
+                String strQuery1 = "";
+                String strQuery2 = "";
+                String strQuery3 = "";
 
                 // Stap 1: Start een mega database-transactie:
                 SqlTransaction transOnderwijs = cnnOnderwijs.BeginTransaction(IsolationLevel.Serializable);
@@ -402,7 +405,8 @@ namespace Onderwijs
                 {
                     // Stap 2: Verwijder alle records uit tblDoelCompetentie met betrekking tot het leerdoel.
                     //         Vanwege Cascading Update worden alle gekoppelde gedragskenmerken automatisch verwijderd uit tblDoelCompetentieGedragskenmerken.
-                    using (SqlCommand cmdDelete = new SqlCommand("DELETE FROM tblDoelCompetentie WHERE fkDoel = " + intDoelID.ToString(), cnnOnderwijs, transOnderwijs))
+                    strQuery1 = "DELETE FROM tblDoelCompetentie WHERE fkDoel = " + intDoelID.ToString();
+                    using (SqlCommand cmdDelete = new SqlCommand(strQuery1, cnnOnderwijs, transOnderwijs))
                     {
                         intRecordsDeleted = cmdDelete.ExecuteNonQuery();
                     }
@@ -479,9 +483,10 @@ namespace Onderwijs
 
                             // Stap 4.3: Maak record aan voor deze ene competentiekoppeling:
                             intDoelCompetentieId++;
-                            using (SqlCommand cmdInsert = new SqlCommand("INSERT INTO tblDoelCompetentie (pkId, fkCompetentie, fkDoel, fkNiveauT, fkNiveauC, fkNiveauZ) " +
+                            strQuery2 = "INSERT INTO tblDoelCompetentie (pkId, fkCompetentie, fkDoel, fkNiveauT, fkNiveauC, fkNiveauZ) " +
                                 "VALUES (" + intDoelCompetentieId.ToString() + ", " + intCompetentieId.ToString() + ", " + intDoelID.ToString() + ", " +
-                                intAvTNiveauId.ToString() + ", " + intAvCNiveauId.ToString() + ", " + intMvZNiveauId.ToString() + ")", cnnOnderwijs, transOnderwijs))
+                                intAvTNiveauId.ToString() + ", " + intAvCNiveauId.ToString() + ", " + intMvZNiveauId.ToString() + ")";
+                            using (SqlCommand cmdInsert = new SqlCommand(strQuery2, cnnOnderwijs, transOnderwijs))
                             {
                                 intRecordsInserted += cmdInsert.ExecuteNonQuery();
                             }
@@ -526,8 +531,9 @@ namespace Onderwijs
 
                                     // Stap 4.5.3: Maak record aan voor deze ene gedragskenmerkkoppeling:
                                     intDoelCompetentieGedragskenmerkId++;
-                                    using (SqlCommand cmdInsert = new SqlCommand("INSERT INTO tblDoelCompetentieGedragskenmerk (pkId, fkGedragskenmerk, fkDoelCompetentie) " +
-                                        "VALUES (" + intDoelCompetentieGedragskenmerkId.ToString() + ", " + intGedragskenmerkId.ToString() + ", " + intDoelCompetentieId.ToString() + ")", cnnOnderwijs, transOnderwijs))
+                                    strQuery3 = "INSERT INTO tblDoelCompetentieGedragskenmerk (pkId, fkGedragskenmerk, fkDoelCompetentie) " +
+                                        "VALUES (" + intDoelCompetentieGedragskenmerkId.ToString() + ", " + intGedragskenmerkId.ToString() + ", " + intDoelCompetentieId.ToString() + ")";
+                                    using (SqlCommand cmdInsert = new SqlCommand(strQuery3, cnnOnderwijs, transOnderwijs))
                                     {
                                         // Ter info: dit aantal wordt niet opgeteld bij het totaal omdat bij het deleten ze ook niet meegenomen worden (omdat ze door de DB zelf deleted worden middels cascading delete).
                                         int intAantalRecords = cmdInsert.ExecuteNonQuery();
@@ -539,11 +545,17 @@ namespace Onderwijs
 
                     // Stap 5: Commit database-transactie:
                     transOnderwijs.Commit();
+                    Program.logMessage("Commit 1/3: " + Program.removeSpecialChars(strQuery1), cnnOnderwijs);
+                    Program.logMessage("Commit 2/3: " + Program.removeSpecialChars(strQuery2), cnnOnderwijs);
+                    Program.logMessage("Commit 3/3: " + Program.removeSpecialChars(strQuery3), cnnOnderwijs);
                     MessageBox.Show("Commit:\nAantal records deleted: " + intRecordsDeleted.ToString() + "\nAantal records inserted: " + intRecordsInserted.ToString(), "Competentiekoppelingen opslaan...", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch
                 {
                     transOnderwijs.Rollback();
+                    Program.logMessage("Rollback 1/3: " + Program.removeSpecialChars(strQuery1), cnnOnderwijs);
+                    Program.logMessage("Rollback 2/3: " + Program.removeSpecialChars(strQuery2), cnnOnderwijs);
+                    Program.logMessage("Rollback 3/3: " + Program.removeSpecialChars(strQuery3), cnnOnderwijs);
                     MessageBox.Show("Rollback: Iets gaat hier niet chocotof!", "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
