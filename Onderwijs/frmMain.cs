@@ -363,43 +363,6 @@ namespace Onderwijs
             }
         }
 
-        private void cmdBoKS_Click(object sender, EventArgs e)
-        {
-            int intGeselecteerdDoel = Convert.ToInt32(((Button)sender).Name.Substring(((Button)sender).Name.Length - 1, 1));
-            int intDoelId = udfDoelId(intGeselecteerdDoel);
-            if (intDoelId > 0)
-            {
-                // Open het formulier en edit de gekoppelde BoKS-items:
-                udsEditBoKS(intDoelId);
-
-                // Ververs de BoKS-info in het hoofdscherm:
-                udsShowDoelBoKSItems(intGeselecteerdDoel);
-
-            }
-            else
-            {
-                MessageBox.Show("Sla het nieuwe onderwijsdoel eerst op alvorens BoKS-items te koppelen.", "BoKS-items koppelen (DoelId = 0)", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
-        private void cmdCompetenties_Click(object sender, EventArgs e)
-        {
-            int intGeselecteerdDoel = Convert.ToInt32(((Button)sender).Name.Substring(((Button)sender).Name.Length - 1, 1));
-            int intDoelId = udfDoelId(intGeselecteerdDoel);
-            if (intDoelId > 0)
-            {
-                // Open het formulier en edit de gekoppelde competenties:
-                udsEditCompetenties(intDoelId);
-
-                // Ververs de competentie-info in het hoofdscherm:
-                udsShowDoelCompetenties(intGeselecteerdDoel);
-            }
-            else
-            {
-                MessageBox.Show("Sla het nieuwe onderwijsdoel eerst op alvorens competenties te koppelen.", "Competenties koppelen (DoelId = 0)", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
         private void udsAddDoel()
         {
             intDoel++;
@@ -452,18 +415,11 @@ namespace Onderwijs
                             case ("cmdDelete"):
                                 cmdTo.Click += new System.EventHandler(cmdDelete_Click);
                                 break;
-                            case ("cmdBoKS"):
-                                cmdTo.Click += new System.EventHandler(cmdBoKS_Click);
-                                break;
-                            case ("cmdCompetenties"):
-                                cmdTo.Click += new System.EventHandler(cmdCompetenties_Click);
-                                break;
                             case ("cmdSave"):
                                 cmdTo.Click += new System.EventHandler(cmdSave_Click);
                                 break;
                             default:
-                                // Debug:
-                                MessageBox.Show(ctrFrom.Name, "Geen event gekoppeld!");
+                                // Do Nothing
                                 break;
                         }
                         grpNew.Controls.Add(cmdTo);
@@ -509,6 +465,19 @@ namespace Onderwijs
                         lstTo.Name = ctrFrom.Tag.ToString() + intDoel.ToString();
                         lstTo.IntegralHeight = ((ListBox)ctrFrom).IntegralHeight;
                         lstTo.BackColor = ((ListBox)ctrFrom).BackColor;
+                        switch (ctrFrom.Tag.ToString())
+                        {
+                            case ("lstBoKS"):
+                                lstTo.Click += new System.EventHandler(lstBoKS_Click);
+                                break;
+                            case ("lstCompetenties"):
+                                lstTo.Click += new System.EventHandler(lstCompetenties_Click);
+                                break;
+                            default:
+                                // Debug:
+                                MessageBox.Show(ctrFrom.Name, "Geen event gekoppeld!");
+                                break;
+                        }
                         grpNew.Controls.Add(lstTo);
                         break;
 
@@ -1031,6 +1000,43 @@ namespace Onderwijs
         private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             Program.logMessage("Applicatie gestopt.", cnnOnderwijs);
+        }
+
+        private void lstBoKS_Click(object sender, EventArgs e)
+        {
+            int intGeselecteerdDoel = Convert.ToInt32(((ListBox)sender).Name.Substring(((ListBox)sender).Name.Length - 1, 1));
+            int intDoelId = udfDoelId(intGeselecteerdDoel);
+            if (intDoelId > 0)
+            {
+                // Open het formulier en edit de gekoppelde BoKS-items:
+                udsEditBoKS(intDoelId);
+
+                // Ververs de BoKS-info in het hoofdscherm:
+                udsShowDoelBoKSItems(intGeselecteerdDoel);
+
+            }
+            else
+            {
+                MessageBox.Show("Sla het nieuwe onderwijsdoel eerst op alvorens BoKS-items te koppelen.", "BoKS-items koppelen (DoelId = 0)", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void lstCompetenties_Click(object sender, EventArgs e)
+        {
+            int intGeselecteerdDoel = Convert.ToInt32(((ListBox)sender).Name.Substring(((ListBox)sender).Name.Length - 1, 1));
+            int intDoelId = udfDoelId(intGeselecteerdDoel);
+            if (intDoelId > 0)
+            {
+                // Open het formulier en edit de gekoppelde competenties:
+                udsEditCompetenties(intDoelId);
+
+                // Ververs de competentie-info in het hoofdscherm:
+                udsShowDoelCompetenties(intGeselecteerdDoel);
+            }
+            else
+            {
+                MessageBox.Show("Sla het nieuwe onderwijsdoel eerst op alvorens competenties te koppelen.", "Competenties koppelen (DoelId = 0)", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

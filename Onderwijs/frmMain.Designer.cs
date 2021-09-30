@@ -39,8 +39,6 @@
             this.lblDoeltype1 = new System.Windows.Forms.Label();
             this.cmdSave1 = new System.Windows.Forms.Button();
             this.lblDoelId1 = new System.Windows.Forms.Label();
-            this.cmdCompetenties1 = new System.Windows.Forms.Button();
-            this.cmdBoKS1 = new System.Windows.Forms.Button();
             this.lstCompetenties1 = new System.Windows.Forms.ListBox();
             this.lstBoKS1 = new System.Windows.Forms.ListBox();
             this.lblCompetenties1 = new System.Windows.Forms.Label();
@@ -176,8 +174,6 @@
             this.grpDoel1.Controls.Add(this.lblDoeltype1);
             this.grpDoel1.Controls.Add(this.cmdSave1);
             this.grpDoel1.Controls.Add(this.lblDoelId1);
-            this.grpDoel1.Controls.Add(this.cmdCompetenties1);
-            this.grpDoel1.Controls.Add(this.cmdBoKS1);
             this.grpDoel1.Controls.Add(this.lstCompetenties1);
             this.grpDoel1.Controls.Add(this.lstBoKS1);
             this.grpDoel1.Controls.Add(this.lblCompetenties1);
@@ -271,28 +267,6 @@
             this.lblDoelId1.Tag = "lblDoelId";
             this.lblDoelId1.Text = "(Id=0)";
             // 
-            // cmdCompetenties1
-            // 
-            this.cmdCompetenties1.Location = new System.Drawing.Point(1140, 10);
-            this.cmdCompetenties1.Name = "cmdCompetenties1";
-            this.cmdCompetenties1.Size = new System.Drawing.Size(28, 20);
-            this.cmdCompetenties1.TabIndex = 31;
-            this.cmdCompetenties1.Tag = "cmdCompetenties";
-            this.cmdCompetenties1.Text = "···";
-            this.cmdCompetenties1.UseVisualStyleBackColor = true;
-            this.cmdCompetenties1.Click += new System.EventHandler(this.cmdCompetenties_Click);
-            // 
-            // cmdBoKS1
-            // 
-            this.cmdBoKS1.Location = new System.Drawing.Point(1043, 10);
-            this.cmdBoKS1.Name = "cmdBoKS1";
-            this.cmdBoKS1.Size = new System.Drawing.Size(28, 20);
-            this.cmdBoKS1.TabIndex = 30;
-            this.cmdBoKS1.Tag = "cmdBoKS";
-            this.cmdBoKS1.Text = "···";
-            this.cmdBoKS1.UseVisualStyleBackColor = true;
-            this.cmdBoKS1.Click += new System.EventHandler(this.cmdBoKS_Click);
-            // 
             // lstCompetenties1
             // 
             this.lstCompetenties1.BackColor = System.Drawing.SystemColors.Window;
@@ -303,6 +277,7 @@
             this.lstCompetenties1.Size = new System.Drawing.Size(193, 62);
             this.lstCompetenties1.TabIndex = 29;
             this.lstCompetenties1.Tag = "lstCompetenties";
+            this.lstCompetenties1.Click += new System.EventHandler(this.lstCompetenties_Click);
             // 
             // lstBoKS1
             // 
@@ -314,21 +289,22 @@
             this.lstBoKS1.Size = new System.Drawing.Size(91, 62);
             this.lstBoKS1.TabIndex = 28;
             this.lstBoKS1.Tag = "lstBoKS";
+            this.lstBoKS1.Click += new System.EventHandler(this.lstBoKS_Click);
             // 
             // lblCompetenties1
             // 
             this.lblCompetenties1.AutoSize = true;
-            this.lblCompetenties1.Location = new System.Drawing.Point(1169, 16);
+            this.lblCompetenties1.Location = new System.Drawing.Point(1137, 16);
             this.lblCompetenties1.Name = "lblCompetenties1";
-            this.lblCompetenties1.Size = new System.Drawing.Size(146, 13);
+            this.lblCompetenties1.Size = new System.Drawing.Size(170, 13);
             this.lblCompetenties1.TabIndex = 27;
             this.lblCompetenties1.Tag = "lblCompetenties";
-            this.lblCompetenties1.Text = "Competenties/gedragskenm.:";
+            this.lblCompetenties1.Text = "Competenties/gedragskenmerken:";
             // 
             // lblBoKS1
             // 
             this.lblBoKS1.AutoSize = true;
-            this.lblBoKS1.Location = new System.Drawing.Point(1072, 16);
+            this.lblBoKS1.Location = new System.Drawing.Point(1041, 16);
             this.lblBoKS1.Name = "lblBoKS1";
             this.lblBoKS1.Size = new System.Drawing.Size(64, 13);
             this.lblBoKS1.TabIndex = 26;
@@ -372,10 +348,10 @@
             this.lblBloom1.AutoSize = true;
             this.lblBloom1.Location = new System.Drawing.Point(881, 16);
             this.lblBloom1.Name = "lblBloom1";
-            this.lblBloom1.Size = new System.Drawing.Size(68, 13);
+            this.lblBloom1.Size = new System.Drawing.Size(106, 13);
             this.lblBloom1.TabIndex = 22;
             this.lblBloom1.Tag = "lblBloom";
-            this.lblBloom1.Text = "Denkniveau:";
+            this.lblBloom1.Text = "Denkniveau (Bloom):";
             // 
             // chkCreeren1
             // 
@@ -1179,8 +1155,6 @@
         private System.Windows.Forms.ListBox lstBoKS1;
         private System.Windows.Forms.Label lblCompetenties1;
         private System.Windows.Forms.Label lblBoKS1;
-        private System.Windows.Forms.Button cmdCompetenties1;
-        private System.Windows.Forms.Button cmdBoKS1;
         private System.Windows.Forms.Label lblDoelId1;
         private System.Windows.Forms.GroupBox grpBediening;
         private System.Windows.Forms.Button cmdDoelenOpslaan;
