@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2000
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Onderwijs", "Onderwijs\Onderwijs.csproj", "{C7A4CFA8-A553-430B-9E18-40BFB7A455FF}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "OnderwijsSetup", "OnderwijsSetup\OnderwijsSetup.vdproj", "{0AB5E9A0-BCBC-4750-8596-EEFD3C7D8125}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C7A4CFA8-A553-430B-9E18-40BFB7A455FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C7A4CFA8-A553-430B-9E18-40BFB7A455FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7A4CFA8-A553-430B-9E18-40BFB7A455FF}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{C7A4CFA8-A553-430B-9E18-40BFB7A455FF}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{C7A4CFA8-A553-430B-9E18-40BFB7A455FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7A4CFA8-A553-430B-9E18-40BFB7A455FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AB5E9A0-BCBC-4750-8596-EEFD3C7D8125}.Debug|Any CPU.ActiveCfg = Debug
+		{0AB5E9A0-BCBC-4750-8596-EEFD3C7D8125}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
