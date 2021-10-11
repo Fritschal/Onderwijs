@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Onderwijs
 {
@@ -35,6 +36,10 @@ namespace Onderwijs
             cnnOnderwijs.Open();
             Program.logMessage("Applicatie gestart.", cnnOnderwijs);
             udsStatischeVulling();
+
+            FileVersionInfo fviAssembly = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
+
+            this.Text = "Onderwijs ET/TI  (versie " + fviAssembly.FileMajorPart + "." + fviAssembly.FileBuildPart + ")";
             blnStartupReady = true;
         }
 
@@ -523,7 +528,7 @@ namespace Onderwijs
 
                 /*************************
                  * 
-                 * Aanpassing 2021-09-28: DELETE-query vervangen voor blnMarkedForDelition = true
+                 * Aanpassing 2021-09-28: DELETE-query vervangen voor blnMarkedForDeletion = true
                  * 
                  *************************/
 
@@ -646,7 +651,10 @@ namespace Onderwijs
                         int intAvT = (int)rdrDoelCompetenties["AvT"];
                         int intAvC = (int)rdrDoelCompetenties["AvC"];
                         int intMvZ = (int)rdrDoelCompetenties["MvZ"];
-                        strRegel += " (" + Program.intNiveau(intAvT, intAvC, intMvZ).ToString() + ")";
+                        // strRegel += " (" + Program.intNiveau(intAvT, intAvC, intMvZ).ToString() + ")";
+                        strRegel += " (" + niveau2String(intAvT) + ", ";
+                        strRegel += niveau2String(intAvC) + ", ";
+                        strRegel += niveau2String(intMvZ) + ")";
 
                         // En dan nog de gedragskenmerken (GK) die bij deze doel-competentie horen...
                         String strAfkorting = rdrDoelCompetenties["CompetentieAfkorting"].ToString();
@@ -660,7 +668,8 @@ namespace Onderwijs
                                     intGKTeller++;
                                     if (intGKTeller == 1)
                                     {
-                                        strRegel += "\t ";
+                                        //strRegel += "\t ";
+                                        strRegel += " / ";
                                     }
                                     else
                                     {
@@ -1036,6 +1045,21 @@ namespace Onderwijs
             else
             {
                 MessageBox.Show("Sla het nieuwe onderwijsdoel eerst op alvorens competenties te koppelen.", "Competenties koppelen (DoelId = 0)", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private String niveau2String(int niveau)
+        {
+            switch (niveau)
+            {
+                case 1:
+                    return "I";
+                case 2:
+                    return "II";
+                case 3:
+                    return "III";
+                default:
+                    return "0";
             }
         }
     }

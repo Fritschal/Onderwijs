@@ -1083,7 +1083,10 @@
             this.Controls.Add(this.grpDoel1);
             this.Controls.Add(this.grpToetscodes);
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(1526, 908);
+            this.MinimumSize = new System.Drawing.Size(1526, 908);
             this.Name = "frmMain";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Onderwijs ET/TI";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
