@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.tabCompetenties = new System.Windows.Forms.TabControl();
             this.tabINI = new System.Windows.Forms.TabPage();
+            this.lblTip = new System.Windows.Forms.Label();
             this.lblININiveau = new System.Windows.Forms.Label();
             this.txtININiveau = new System.Windows.Forms.TextBox();
             this.grpINIGedragskenmerken = new System.Windows.Forms.GroupBox();
@@ -61,7 +62,6 @@
             this.grpOnderwijsdoel = new System.Windows.Forms.GroupBox();
             this.txtOnderwijsdoel = new System.Windows.Forms.TextBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.lblTip = new System.Windows.Forms.Label();
             this.tabCompetenties.SuspendLayout();
             this.tabINI.SuspendLayout();
             this.grpINIGedragskenmerken.SuspendLayout();
@@ -100,6 +100,16 @@
             this.tabINI.Text = "Initieel";
             this.tabINI.ToolTipText = "Initieel";
             this.tabINI.UseVisualStyleBackColor = true;
+            // 
+            // lblTip
+            // 
+            this.lblTip.AutoSize = true;
+            this.lblTip.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTip.Location = new System.Drawing.Point(181, 10);
+            this.lblTip.Name = "lblTip";
+            this.lblTip.Size = new System.Drawing.Size(222, 13);
+            this.lblTip.TabIndex = 13;
+            this.lblTip.Text = "<< SELECTEREN OM TE KOPPELEN ";
             // 
             // lblININiveau
             // 
@@ -430,7 +440,7 @@
             this.cmdAccepteer.Name = "cmdAccepteer";
             this.cmdAccepteer.Size = new System.Drawing.Size(105, 30);
             this.cmdAccepteer.TabIndex = 5;
-            this.cmdAccepteer.Text = "Accepteer";
+            this.cmdAccepteer.Text = "Opslaan";
             this.toolTip.SetToolTip(this.cmdAccepteer, "Opslaan en sluiten.");
             this.cmdAccepteer.UseVisualStyleBackColor = true;
             this.cmdAccepteer.Click += new System.EventHandler(this.cmdAccepteer_Click);
@@ -441,7 +451,7 @@
             this.cmdAnnuleer.Name = "cmdAnnuleer";
             this.cmdAnnuleer.Size = new System.Drawing.Size(105, 30);
             this.cmdAnnuleer.TabIndex = 4;
-            this.cmdAnnuleer.Text = "Annuleer";
+            this.cmdAnnuleer.Text = "Annuleren";
             this.toolTip.SetToolTip(this.cmdAnnuleer, "Sluiten zonder opslaan.");
             this.cmdAnnuleer.UseVisualStyleBackColor = true;
             this.cmdAnnuleer.Click += new System.EventHandler(this.cmdAnnuleer_Click);
@@ -465,16 +475,6 @@
             this.txtOnderwijsdoel.ReadOnly = true;
             this.txtOnderwijsdoel.Size = new System.Drawing.Size(594, 61);
             this.txtOnderwijsdoel.TabIndex = 0;
-            // 
-            // lblTip
-            // 
-            this.lblTip.AutoSize = true;
-            this.lblTip.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTip.Location = new System.Drawing.Point(181, 10);
-            this.lblTip.Name = "lblTip";
-            this.lblTip.Size = new System.Drawing.Size(222, 13);
-            this.lblTip.TabIndex = 13;
-            this.lblTip.Text = "<< SELECTEREN OM TE KOPPELEN ";
             // 
             // frmCompetentiekoppeling
             // 

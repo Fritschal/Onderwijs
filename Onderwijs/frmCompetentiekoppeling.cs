@@ -40,6 +40,7 @@ namespace Onderwijs
                 udsDynamischeVulling(intDoelID);
             }
             blnFormLoadReady = true;
+            blnErIsIetsGewijzigd = false;
         }
 
         private void udsDynamischeVulling(int intDoelID)

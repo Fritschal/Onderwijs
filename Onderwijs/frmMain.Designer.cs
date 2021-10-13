@@ -617,6 +617,7 @@
             // 
             // chkSW
             // 
+            this.chkSW.AutoCheck = false;
             this.chkSW.AutoSize = true;
             this.chkSW.Location = new System.Drawing.Point(6, 65);
             this.chkSW.Name = "chkSW";
@@ -627,6 +628,7 @@
             // 
             // chkHW
             // 
+            this.chkHW.AutoCheck = false;
             this.chkHW.AutoSize = true;
             this.chkHW.Location = new System.Drawing.Point(6, 19);
             this.chkHW.Name = "chkHW";
@@ -637,6 +639,7 @@
             // 
             // chkAU
             // 
+            this.chkAU.AutoCheck = false;
             this.chkAU.AutoSize = true;
             this.chkAU.Location = new System.Drawing.Point(6, 42);
             this.chkAU.Name = "chkAU";
@@ -658,6 +661,7 @@
             // 
             // btnProject
             // 
+            this.btnProject.AutoCheck = false;
             this.btnProject.AutoSize = true;
             this.btnProject.Location = new System.Drawing.Point(56, 19);
             this.btnProject.Name = "btnProject";
@@ -668,8 +672,10 @@
             // 
             // btnVak
             // 
+            this.btnVak.AutoCheck = false;
             this.btnVak.AutoSize = true;
             this.btnVak.Checked = true;
+            this.btnVak.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnVak.Location = new System.Drawing.Point(6, 19);
             this.btnVak.Name = "btnVak";
             this.btnVak.Size = new System.Drawing.Size(44, 17);

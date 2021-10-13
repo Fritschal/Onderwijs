@@ -81,7 +81,7 @@
             this.cmdAnnuleer.Name = "cmdAnnuleer";
             this.cmdAnnuleer.Size = new System.Drawing.Size(105, 30);
             this.cmdAnnuleer.TabIndex = 8;
-            this.cmdAnnuleer.Text = "Annuleer";
+            this.cmdAnnuleer.Text = "Annuleren";
             this.toolTip.SetToolTip(this.cmdAnnuleer, "Sluiten zonder opslaan.");
             this.cmdAnnuleer.UseVisualStyleBackColor = true;
             this.cmdAnnuleer.Click += new System.EventHandler(this.cmdAnnuleer_Click);
@@ -92,7 +92,7 @@
             this.cmdAccepteer.Name = "cmdAccepteer";
             this.cmdAccepteer.Size = new System.Drawing.Size(105, 30);
             this.cmdAccepteer.TabIndex = 9;
-            this.cmdAccepteer.Text = "Accepteer";
+            this.cmdAccepteer.Text = "Opslaan";
             this.toolTip.SetToolTip(this.cmdAccepteer, "Opslaan en sluiten.");
             this.cmdAccepteer.UseVisualStyleBackColor = true;
             this.cmdAccepteer.Click += new System.EventHandler(this.cmdAccepteer_Click);
