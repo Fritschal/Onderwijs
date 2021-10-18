@@ -359,7 +359,10 @@ namespace Onderwijs
                 int intRecordsInserted = 0;
                 if (udsSaveDoel(Convert.ToInt32(((Button)sender).Name.Substring(((Button)sender).Name.Length - 1, 1)), ref intRecordsUpdated, ref intRecordsInserted) > 0)
                 {
-                    MessageBox.Show("Aantal records updated: " + intRecordsUpdated.ToString() + "\nAantal records inserted: " + intRecordsInserted.ToString(), "Doelen opslaan...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (Globals.DEBUG)
+                    {
+                        MessageBox.Show("Aantal records updated: " + intRecordsUpdated.ToString() + "\nAantal records inserted: " + intRecordsInserted.ToString(), "Doelen opslaan...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
                 else
                 {
@@ -545,7 +548,11 @@ namespace Onderwijs
                     }
                     transOnderwijs.Commit();
                     Program.logMessage("Commit: " + Program.removeSpecialChars(strQuery), cnnOnderwijs);
-                    MessageBox.Show("Aantal records gemarkeerd als verwijderd: " + intRecordsDeleted.ToString(), "Doel verwijderen...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (Globals.DEBUG)
+                    {
+                        MessageBox.Show("Aantal records gemarkeerd als verwijderd: " + intRecordsDeleted.ToString(), "Doel verwijderen...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+
                 }
                 catch
                 {
@@ -905,7 +912,10 @@ namespace Onderwijs
                     MessageBox.Show("Iets gaat hier niet chocotof!", "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            MessageBox.Show("Aantal records updated: " + intRecordsUpdated.ToString() + "\nAantal records inserted: " + intRecordsInserted.ToString(), "Doelen opslaan...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (Globals.DEBUG)
+            {
+                MessageBox.Show("Aantal records updated: " + intRecordsUpdated.ToString() + "\nAantal records inserted: " + intRecordsInserted.ToString(), "Doelen opslaan...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void txtWeging_TextChanged(object sender, EventArgs e)

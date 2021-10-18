@@ -143,7 +143,7 @@
             this.grpToetscodes.Size = new System.Drawing.Size(155, 158);
             this.grpToetscodes.TabIndex = 2;
             this.grpToetscodes.TabStop = false;
-            this.grpToetscodes.Text = "(2) Selecteer Toets:";
+            this.grpToetscodes.Text = "(3) Selecteer Toets:";
             // 
             // lstToetscodes
             // 
@@ -898,7 +898,7 @@
             this.grpVakcodes.Size = new System.Drawing.Size(155, 547);
             this.grpVakcodes.TabIndex = 16;
             this.grpVakcodes.TabStop = false;
-            this.grpVakcodes.Text = "(1) Selecteer Module:";
+            this.grpVakcodes.Text = "(2) Selecteer Module:";
             // 
             // lstCursuscodes
             // 
@@ -928,7 +928,7 @@
             this.grpBlokSelectie.Size = new System.Drawing.Size(155, 141);
             this.grpBlokSelectie.TabIndex = 17;
             this.grpBlokSelectie.TabStop = false;
-            this.grpBlokSelectie.Text = "Blokselectie:";
+            this.grpBlokSelectie.Text = "(1) Selecteer Blok:";
             // 
             // btnBlok12
             // 

@@ -549,7 +549,10 @@ namespace Onderwijs
                     Program.logMessage("Commit 1/3: " + Program.removeSpecialChars(strQuery1), cnnOnderwijs);
                     Program.logMessage("Commit 2/3: " + Program.removeSpecialChars(strQuery2), cnnOnderwijs);
                     Program.logMessage("Commit 3/3: " + Program.removeSpecialChars(strQuery3), cnnOnderwijs);
-                    MessageBox.Show("Commit:\nAantal records deleted: " + intRecordsDeleted.ToString() + "\nAantal records inserted: " + intRecordsInserted.ToString(), "Competentiekoppelingen opslaan...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (Globals.DEBUG)
+                    {
+                        MessageBox.Show("Commit:\nAantal records deleted: " + intRecordsDeleted.ToString() + "\nAantal records inserted: " + intRecordsInserted.ToString(), "Competentiekoppelingen opslaan...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
                 catch
                 {
