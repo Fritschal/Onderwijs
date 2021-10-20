@@ -60,6 +60,9 @@
             this.cmdAdd = new System.Windows.Forms.Button();
             this.ttpOnderwijs = new System.Windows.Forms.ToolTip(this.components);
             this.grpBediening = new System.Windows.Forms.GroupBox();
+            this.txtTijdstip = new System.Windows.Forms.TextBox();
+            this.txtControleur = new System.Windows.Forms.TextBox();
+            this.chkGecontroleerd = new System.Windows.Forms.CheckBox();
             this.txtTotaal = new System.Windows.Forms.Label();
             this.lblTotaal = new System.Windows.Forms.Label();
             this.cmdDoelenOpslaan = new System.Windows.Forms.Button();
@@ -484,6 +487,9 @@
             // 
             // grpBediening
             // 
+            this.grpBediening.Controls.Add(this.txtTijdstip);
+            this.grpBediening.Controls.Add(this.txtControleur);
+            this.grpBediening.Controls.Add(this.chkGecontroleerd);
             this.grpBediening.Controls.Add(this.txtTotaal);
             this.grpBediening.Controls.Add(this.lblTotaal);
             this.grpBediening.Controls.Add(this.cmdDoelenOpslaan);
@@ -494,6 +500,34 @@
             this.grpBediening.TabIndex = 13;
             this.grpBediening.TabStop = false;
             this.grpBediening.Text = "Doelen:";
+            // 
+            // txtTijdstip
+            // 
+            this.txtTijdstip.Location = new System.Drawing.Point(1228, 24);
+            this.txtTijdstip.Name = "txtTijdstip";
+            this.txtTijdstip.ReadOnly = true;
+            this.txtTijdstip.Size = new System.Drawing.Size(106, 20);
+            this.txtTijdstip.TabIndex = 38;
+            // 
+            // txtControleur
+            // 
+            this.txtControleur.Location = new System.Drawing.Point(1063, 24);
+            this.txtControleur.Name = "txtControleur";
+            this.txtControleur.ReadOnly = true;
+            this.txtControleur.Size = new System.Drawing.Size(159, 20);
+            this.txtControleur.TabIndex = 37;
+            // 
+            // chkGecontroleerd
+            // 
+            this.chkGecontroleerd.AutoCheck = false;
+            this.chkGecontroleerd.AutoSize = true;
+            this.chkGecontroleerd.Location = new System.Drawing.Point(964, 26);
+            this.chkGecontroleerd.Name = "chkGecontroleerd";
+            this.chkGecontroleerd.Size = new System.Drawing.Size(93, 17);
+            this.chkGecontroleerd.TabIndex = 36;
+            this.chkGecontroleerd.Text = "Gecontroleerd";
+            this.chkGecontroleerd.UseVisualStyleBackColor = true;
+            this.chkGecontroleerd.Click += new System.EventHandler(this.chkGecontroleerd_Click);
             // 
             // txtTotaal
             // 
@@ -538,7 +572,7 @@
             this.grpCursus.Controls.Add(this.grpCursustype);
             this.grpCursus.Controls.Add(this.grpToetcodes);
             this.grpCursus.Controls.Add(this.grpCursusBlok);
-            this.grpCursus.Location = new System.Drawing.Point(661, 730);
+            this.grpCursus.Location = new System.Drawing.Point(661, 665);
             this.grpCursus.Name = "grpCursus";
             this.grpCursus.Size = new System.Drawing.Size(844, 131);
             this.grpCursus.TabIndex = 14;
@@ -740,7 +774,7 @@
             this.grpToets.Controls.Add(this.grpToetsnaam);
             this.grpToets.Controls.Add(this.grpToetscode);
             this.grpToets.Controls.Add(this.grpToetsvorm);
-            this.grpToets.Location = new System.Drawing.Point(165, 731);
+            this.grpToets.Location = new System.Drawing.Point(165, 666);
             this.grpToets.Name = "grpToets";
             this.grpToets.Size = new System.Drawing.Size(446, 130);
             this.grpToets.TabIndex = 15;
@@ -895,7 +929,7 @@
             this.grpVakcodes.Controls.Add(this.lstCursuscodes);
             this.grpVakcodes.Location = new System.Drawing.Point(3, 167);
             this.grpVakcodes.Name = "grpVakcodes";
-            this.grpVakcodes.Size = new System.Drawing.Size(155, 547);
+            this.grpVakcodes.Size = new System.Drawing.Size(155, 482);
             this.grpVakcodes.TabIndex = 16;
             this.grpVakcodes.TabStop = false;
             this.grpVakcodes.Text = "(2) Selecteer Module:";
@@ -906,7 +940,7 @@
             this.lstCursuscodes.IntegralHeight = false;
             this.lstCursuscodes.Location = new System.Drawing.Point(6, 19);
             this.lstCursuscodes.Name = "lstCursuscodes";
-            this.lstCursuscodes.Size = new System.Drawing.Size(142, 512);
+            this.lstCursuscodes.Size = new System.Drawing.Size(142, 458);
             this.lstCursuscodes.TabIndex = 2;
             this.lstCursuscodes.SelectedIndexChanged += new System.EventHandler(this.lstCursuscodes_SelectedIndexChanged);
             // 
@@ -923,7 +957,7 @@
             this.grpBlokSelectie.Controls.Add(this.btnBlok2);
             this.grpBlokSelectie.Controls.Add(this.btnBlok1);
             this.grpBlokSelectie.Controls.Add(this.btnAll);
-            this.grpBlokSelectie.Location = new System.Drawing.Point(3, 720);
+            this.grpBlokSelectie.Location = new System.Drawing.Point(3, 655);
             this.grpBlokSelectie.Name = "grpBlokSelectie";
             this.grpBlokSelectie.Size = new System.Drawing.Size(155, 141);
             this.grpBlokSelectie.TabIndex = 17;
@@ -1080,7 +1114,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1510, 869);
+            this.ClientSize = new System.Drawing.Size(1510, 798);
             this.Controls.Add(this.grpBlokSelectie);
             this.Controls.Add(this.grpVakcodes);
             this.Controls.Add(this.grpToets);
@@ -1089,8 +1123,9 @@
             this.Controls.Add(this.grpDoel1);
             this.Controls.Add(this.grpToetscodes);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(1526, 908);
-            this.MinimumSize = new System.Drawing.Size(1526, 908);
+            this.MaximumSize = new System.Drawing.Size(1526, 837);
+            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(1526, 837);
             this.Name = "frmMain";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -1223,5 +1258,8 @@
         private System.Windows.Forms.RadioButton btnBlok2;
         private System.Windows.Forms.RadioButton btnBlok1;
         private System.Windows.Forms.RadioButton btnAll;
+        private System.Windows.Forms.CheckBox chkGecontroleerd;
+        private System.Windows.Forms.TextBox txtTijdstip;
+        private System.Windows.Forms.TextBox txtControleur;
     }
 }

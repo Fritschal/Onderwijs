@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace Onderwijs
 {
@@ -85,7 +86,9 @@ namespace Onderwijs
         public static void logMessage(String strMessage, SqlConnection cnnOnderwijs)
         {
             // Log message in database tblLog.
-            String strDateTime = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss");
+            FileVersionInfo fviAssembly = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            String strVersion = fviAssembly.FileMajorPart + "." + fviAssembly.FileBuildPart;
+            String strDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             String strUserName = Environment.UserName;
             int intMaxId = -1;
 
@@ -106,12 +109,13 @@ namespace Onderwijs
                 }
                 intMaxId++;
 
-                using (SqlCommand cmdInsert = new SqlCommand("INSERT INTO tblLog (pkId, strDateTime, strUserName, strMessage) " +
+                using (SqlCommand cmdInsert = new SqlCommand("INSERT INTO tblLog (pkId, strDateTime, strUserName, strMessage, strVersion) " +
                     "VALUES (" +
                     intMaxId.ToString() + ", '" +
                     strDateTime + "', '" +
                     strUserName + "', '" +
-                    strMessage + "')", cnnOnderwijs, transOnderwijs))
+                    strMessage + "', '" +
+                    strVersion + "')", cnnOnderwijs, transOnderwijs))
                 {
                     int intAantalRecords = cmdInsert.ExecuteNonQuery();
                 }

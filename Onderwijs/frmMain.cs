@@ -229,6 +229,9 @@ namespace Onderwijs
                     txtBlok.Text = rdrToets["Blok"].ToString();
                     txtECs.Text = Convert.ToSingle(rdrToets["ECs"].ToString()).ToString();
                     txtKeuzedeel.Text = rdrToets["Keuzedeel"].ToString().Equals("True") ? "Ja" : "Nee";
+                    chkGecontroleerd.Checked = rdrToets["Gecontroleerd"].ToString().Equals("True");
+                    txtControleur.Text = rdrToets["Controleur"].ToString();
+                    txtTijdstip.Text = rdrToets["Controletijdstip"].ToString();
                 }
             }
 
@@ -1070,6 +1073,62 @@ namespace Onderwijs
                     return "III";
                 default:
                     return "0";
+            }
+        }
+
+        private void chkGecontroleerd_Click(object sender, EventArgs e)
+        {
+            // Toevoeging na presentatie aan team:
+
+            // Stap 1: haal ToetsId op uit de database:
+            int intToetsId = 0;
+            String strToetscode = lstToetscodes.SelectedItem.ToString();
+            String strCursuscode = lstCursuscodes.SelectedItem.ToString();
+            using (SqlCommand cmdToetscode = new SqlCommand("SELECT ToetsId FROM qryToets WHERE Toetscode = '" + strToetscode + "' AND Cursuscode = '" + strCursuscode + "'", cnnOnderwijs))
+            {
+                using (SqlDataReader rdrToetscode = cmdToetscode.ExecuteReader())
+                {
+                    rdrToetscode.Read();
+                    intToetsId = Convert.ToInt32(rdrToetscode["ToetsId"]);
+                }
+            }
+
+            // Stap 2: Update toets-record in tblToets:
+            String strQuery = "UPDATE tblToets SET blnGecontroleerd = ";
+            String strControleur;
+            String strTijdstip;
+            if (!chkGecontroleerd.Checked)
+            {
+                strControleur = Environment.UserName;
+                strTijdstip = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                strQuery += "1";
+            }
+            else
+            {
+                strControleur = "";
+                strTijdstip = "";
+                strQuery += "0";
+            }
+            strQuery += ", strGecontroleerd = '" + strControleur + "', dtmGecontroleerd = '" + strTijdstip + "' WHERE pkId = " + intToetsId.ToString();
+
+            SqlTransaction transOnderwijs = cnnOnderwijs.BeginTransaction(IsolationLevel.Serializable);
+            try
+            {
+                using (SqlCommand cmdUpdate = new SqlCommand(strQuery, cnnOnderwijs, transOnderwijs))
+                {
+                    int intAantalRecords = cmdUpdate.ExecuteNonQuery();
+                }
+                transOnderwijs.Commit();
+                txtControleur.Text = strControleur;
+                txtTijdstip.Text = strTijdstip;
+                chkGecontroleerd.Checked = !chkGecontroleerd.Checked;
+                Program.logMessage("Gecontroleerd: " + Program.removeSpecialChars(strQuery), cnnOnderwijs);
+            }
+            catch
+            {
+                transOnderwijs.Rollback();
+                Program.logMessage("Rollback: " + Program.removeSpecialChars(strQuery), cnnOnderwijs);
+                MessageBox.Show("Iets gaat hier niet chocotof!", "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
