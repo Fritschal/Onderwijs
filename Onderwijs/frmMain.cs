@@ -205,6 +205,9 @@ namespace Onderwijs
 
                         // Vul de lijst met gekoppelde competenties:
                         udsShowDoelCompetenties(intDoelTeller);
+
+                        // Vul de lijst met gekoppelde beroepsproducten:
+                        udsShowDoelBeroepsproducten(intDoelTeller);
                     }
                 }
             }
@@ -484,6 +487,9 @@ namespace Onderwijs
                             case ("lstCompetenties"):
                                 lstTo.Click += new System.EventHandler(lstCompetenties_Click);
                                 break;
+                            case ("lstBeroepsproducten"):
+                                lstTo.Click += new System.EventHandler(lstBeroepsproducten_Click);
+                                break;
                             default:
                                 // Debug:
                                 MessageBox.Show(ctrFrom.Name, "Geen event gekoppeld!");
@@ -746,6 +752,27 @@ namespace Onderwijs
             }
         }
 
+        private void udsShowDoelBeroepsproducten(int intDoelVolgnummer)
+        {
+            // Vul de beroepsproductinformatie in voor het geselecteerde doel.
+            // intDoelVolgnummer:   Het volgnummer op het scherm, beginnende met 1 voor het bovenste getoonde onderwijsdoel.
+
+            int intOnderwijsdoelId = udfDoelId(intDoelVolgnummer);
+            using (SqlCommand cmdDoelBeroepsproducten = new SqlCommand("SELECT * FROM qryDoelBeroepsproduct WHERE OnderwijsdoelId = " + intOnderwijsdoelId + " ORDER BY BeroepsproductId", cnnOnderwijs))
+            {
+                using (SqlDataReader rdrDoelBeroepsproducten = cmdDoelBeroepsproducten.ExecuteReader())
+                {
+                    ListBox lstBeroepsproducten = (ListBox)((GroupBox)Controls["grpDoel" + intDoelVolgnummer.ToString()]).Controls["lstBeroepsproducten" + intDoelVolgnummer.ToString()];
+                    lstBeroepsproducten.Items.Clear();
+                    while (rdrDoelBeroepsproducten.Read())
+                    {
+                        // Voeg item toe aan de lijst:
+                        lstBeroepsproducten.Items.Add(rdrDoelBeroepsproducten["Beroepsproduct"].ToString());
+                    }
+                }
+            }
+        }
+
         private void udsEditBoKS(int intOnderwijsdoelId)
         {
             // Open nieuw form voor het editen van de gekoppelde BoKS-items:
@@ -759,6 +786,14 @@ namespace Onderwijs
             // Open nieuw form voor het editen van de gekoppelde Competenties:
             // intOnderwijsdoelId: De unieke identifier (primary key) van het onderwijsdoel.
             frmCompetentiekoppeling frmModal = new frmCompetentiekoppeling(intOnderwijsdoelId);
+            frmModal.ShowDialog();
+        }
+
+        private void udsEditBeroepsproducten(int intOnderwijsdoelId)
+        {
+            // Open nieuw form voor het editen van de gekoppelde Beroepsproducten:
+            // intOnderwijsdoelId: De unieke identifier (primary key) van het onderwijsdoel.
+            frmBeroepsproductkoppeling frmModal = new frmBeroepsproductkoppeling(intOnderwijsdoelId);
             frmModal.ShowDialog();
         }
 
@@ -1058,6 +1093,24 @@ namespace Onderwijs
             else
             {
                 MessageBox.Show("Sla het nieuwe onderwijsdoel eerst op alvorens competenties te koppelen.", "Competenties koppelen (DoelId = 0)", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void lstBeroepsproducten_Click(object sender, EventArgs e)
+        {
+            int intGeselecteerdDoel = Convert.ToInt32(((ListBox)sender).Name.Substring(((ListBox)sender).Name.Length - 1, 1));
+            int intDoelId = udfDoelId(intGeselecteerdDoel);
+            if (intDoelId > 0)
+            {
+                // Open het formulier en edit de gekoppelde beroepsproducten:
+                udsEditBeroepsproducten(intDoelId);
+
+                // Ververs de beroepsproductinfo-info in het hoofdscherm:
+                udsShowDoelBeroepsproducten(intGeselecteerdDoel);
+            }
+            else
+            {
+                MessageBox.Show("Sla het nieuwe onderwijsdoel eerst op alvorens beroepsproducten te koppelen.", "Beroepsproducten koppelen (DoelId = 0)", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

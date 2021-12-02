@@ -29,10 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.grpToetscodes = new System.Windows.Forms.GroupBox();
+            this.grpToetslijst = new System.Windows.Forms.GroupBox();
             this.lstToetscodes = new System.Windows.Forms.ListBox();
             this.txtOnderwerpen1 = new System.Windows.Forms.TextBox();
             this.grpDoel1 = new System.Windows.Forms.GroupBox();
+            this.lblBeroepsproducten1 = new System.Windows.Forms.Label();
+            this.lstBeroepsproducten1 = new System.Windows.Forms.ListBox();
             this.btnResultaatdoel1 = new System.Windows.Forms.RadioButton();
             this.btnLeerdoel1 = new System.Windows.Forms.RadioButton();
             this.linDoeltype1 = new System.Windows.Forms.Label();
@@ -80,7 +82,7 @@
             this.grpCursustype = new System.Windows.Forms.GroupBox();
             this.btnProject = new System.Windows.Forms.RadioButton();
             this.btnVak = new System.Windows.Forms.RadioButton();
-            this.grpToetcodes = new System.Windows.Forms.GroupBox();
+            this.grpToetscodes = new System.Windows.Forms.GroupBox();
             this.lstCursusToetsen = new System.Windows.Forms.ListBox();
             this.grpCursusBlok = new System.Windows.Forms.GroupBox();
             this.txtCursusBlok = new System.Windows.Forms.TextBox();
@@ -101,7 +103,7 @@
             this.txtToetscode = new System.Windows.Forms.TextBox();
             this.grpToetsvorm = new System.Windows.Forms.GroupBox();
             this.txtToetsvorm = new System.Windows.Forms.TextBox();
-            this.grpVakcodes = new System.Windows.Forms.GroupBox();
+            this.grpModulelijst = new System.Windows.Forms.GroupBox();
             this.lstCursuscodes = new System.Windows.Forms.ListBox();
             this.grpBlokSelectie = new System.Windows.Forms.GroupBox();
             this.btnBlok12 = new System.Windows.Forms.RadioButton();
@@ -115,7 +117,7 @@
             this.btnBlok2 = new System.Windows.Forms.RadioButton();
             this.btnBlok1 = new System.Windows.Forms.RadioButton();
             this.btnAll = new System.Windows.Forms.RadioButton();
-            this.grpToetscodes.SuspendLayout();
+            this.grpToetslijst.SuspendLayout();
             this.grpDoel1.SuspendLayout();
             this.grpBediening.SuspendLayout();
             this.grpCursus.SuspendLayout();
@@ -124,7 +126,7 @@
             this.grpCursusnaam.SuspendLayout();
             this.grpTraject.SuspendLayout();
             this.grpCursustype.SuspendLayout();
-            this.grpToetcodes.SuspendLayout();
+            this.grpToetscodes.SuspendLayout();
             this.grpCursusBlok.SuspendLayout();
             this.grpToets.SuspendLayout();
             this.grpKeuzedeel.SuspendLayout();
@@ -134,19 +136,19 @@
             this.grpToetsnaam.SuspendLayout();
             this.grpToetscode.SuspendLayout();
             this.grpToetsvorm.SuspendLayout();
-            this.grpVakcodes.SuspendLayout();
+            this.grpModulelijst.SuspendLayout();
             this.grpBlokSelectie.SuspendLayout();
             this.SuspendLayout();
             // 
-            // grpToetscodes
+            // grpToetslijst
             // 
-            this.grpToetscodes.Controls.Add(this.lstToetscodes);
-            this.grpToetscodes.Location = new System.Drawing.Point(3, 3);
-            this.grpToetscodes.Name = "grpToetscodes";
-            this.grpToetscodes.Size = new System.Drawing.Size(155, 158);
-            this.grpToetscodes.TabIndex = 2;
-            this.grpToetscodes.TabStop = false;
-            this.grpToetscodes.Text = "(3) Selecteer Toets:";
+            this.grpToetslijst.Controls.Add(this.lstToetscodes);
+            this.grpToetslijst.Location = new System.Drawing.Point(3, 3);
+            this.grpToetslijst.Name = "grpToetslijst";
+            this.grpToetslijst.Size = new System.Drawing.Size(147, 158);
+            this.grpToetslijst.TabIndex = 2;
+            this.grpToetslijst.TabStop = false;
+            this.grpToetslijst.Text = "(3) Selecteer Toets:";
             // 
             // lstToetscodes
             // 
@@ -154,23 +156,25 @@
             this.lstToetscodes.IntegralHeight = false;
             this.lstToetscodes.Location = new System.Drawing.Point(6, 19);
             this.lstToetscodes.Name = "lstToetscodes";
-            this.lstToetscodes.Size = new System.Drawing.Size(142, 131);
+            this.lstToetscodes.Size = new System.Drawing.Size(134, 131);
             this.lstToetscodes.TabIndex = 2;
             this.lstToetscodes.SelectedIndexChanged += new System.EventHandler(this.lstToetscodes_SelectedIndexChanged);
             // 
             // txtOnderwerpen1
             // 
-            this.txtOnderwerpen1.Location = new System.Drawing.Point(532, 32);
+            this.txtOnderwerpen1.Location = new System.Drawing.Point(479, 32);
             this.txtOnderwerpen1.Multiline = true;
             this.txtOnderwerpen1.Name = "txtOnderwerpen1";
             this.txtOnderwerpen1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtOnderwerpen1.Size = new System.Drawing.Size(300, 62);
+            this.txtOnderwerpen1.Size = new System.Drawing.Size(270, 62);
             this.txtOnderwerpen1.TabIndex = 11;
             this.txtOnderwerpen1.Tag = "txtOnderwerpen";
             this.txtOnderwerpen1.TextChanged += new System.EventHandler(this.txtGeneral_TextChanged);
             // 
             // grpDoel1
             // 
+            this.grpDoel1.Controls.Add(this.lblBeroepsproducten1);
+            this.grpDoel1.Controls.Add(this.lstBeroepsproducten1);
             this.grpDoel1.Controls.Add(this.btnResultaatdoel1);
             this.grpDoel1.Controls.Add(this.btnLeerdoel1);
             this.grpDoel1.Controls.Add(this.linDoeltype1);
@@ -196,7 +200,7 @@
             this.grpDoel1.Controls.Add(this.lblOmschrijving1);
             this.grpDoel1.Controls.Add(this.txtOnderwijsdoel1);
             this.grpDoel1.Controls.Add(this.txtOnderwerpen1);
-            this.grpDoel1.Location = new System.Drawing.Point(165, 3);
+            this.grpDoel1.Location = new System.Drawing.Point(156, 3);
             this.grpDoel1.Name = "grpDoel1";
             this.grpDoel1.Size = new System.Drawing.Size(1340, 100);
             this.grpDoel1.TabIndex = 11;
@@ -204,10 +208,32 @@
             this.grpDoel1.Tag = "grpDoel";
             this.grpDoel1.Text = "Doel 1:";
             // 
+            // lblBeroepsproducten1
+            // 
+            this.lblBeroepsproducten1.AutoSize = true;
+            this.lblBeroepsproducten1.Location = new System.Drawing.Point(1216, 16);
+            this.lblBeroepsproducten1.Name = "lblBeroepsproducten1";
+            this.lblBeroepsproducten1.Size = new System.Drawing.Size(97, 13);
+            this.lblBeroepsproducten1.TabIndex = 39;
+            this.lblBeroepsproducten1.Tag = "lblBeroepsproducten";
+            this.lblBeroepsproducten1.Text = "Beroepsproducten:";
+            // 
+            // lstBeroepsproducten1
+            // 
+            this.lstBeroepsproducten1.BackColor = System.Drawing.SystemColors.Window;
+            this.lstBeroepsproducten1.FormattingEnabled = true;
+            this.lstBeroepsproducten1.IntegralHeight = false;
+            this.lstBeroepsproducten1.Location = new System.Drawing.Point(1219, 32);
+            this.lstBeroepsproducten1.Name = "lstBeroepsproducten1";
+            this.lstBeroepsproducten1.Size = new System.Drawing.Size(115, 62);
+            this.lstBeroepsproducten1.TabIndex = 38;
+            this.lstBeroepsproducten1.Tag = "lstBeroepsproducten";
+            this.lstBeroepsproducten1.Click += new System.EventHandler(this.lstBeroepsproducten_Click);
+            // 
             // btnResultaatdoel1
             // 
             this.btnResultaatdoel1.AutoSize = true;
-            this.btnResultaatdoel1.Location = new System.Drawing.Point(117, 57);
+            this.btnResultaatdoel1.Location = new System.Drawing.Point(107, 57);
             this.btnResultaatdoel1.Name = "btnResultaatdoel1";
             this.btnResultaatdoel1.Size = new System.Drawing.Size(90, 17);
             this.btnResultaatdoel1.TabIndex = 37;
@@ -219,7 +245,7 @@
             // 
             this.btnLeerdoel1.AutoSize = true;
             this.btnLeerdoel1.Checked = true;
-            this.btnLeerdoel1.Location = new System.Drawing.Point(117, 38);
+            this.btnLeerdoel1.Location = new System.Drawing.Point(107, 38);
             this.btnLeerdoel1.Name = "btnLeerdoel1";
             this.btnLeerdoel1.Size = new System.Drawing.Size(66, 17);
             this.btnLeerdoel1.TabIndex = 36;
@@ -232,27 +258,27 @@
             // linDoeltype1
             // 
             this.linDoeltype1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.linDoeltype1.Location = new System.Drawing.Point(116, 32);
+            this.linDoeltype1.Location = new System.Drawing.Point(107, 32);
             this.linDoeltype1.Name = "linDoeltype1";
-            this.linDoeltype1.Size = new System.Drawing.Size(100, 1);
+            this.linDoeltype1.Size = new System.Drawing.Size(90, 1);
             this.linDoeltype1.TabIndex = 35;
             this.linDoeltype1.Tag = "linDoeltype";
             // 
             // lblDoeltype1
             // 
             this.lblDoeltype1.AutoSize = true;
-            this.lblDoeltype1.Location = new System.Drawing.Point(113, 16);
+            this.lblDoeltype1.Location = new System.Drawing.Point(103, 16);
             this.lblDoeltype1.Name = "lblDoeltype1";
-            this.lblDoeltype1.Size = new System.Drawing.Size(101, 13);
+            this.lblDoeltype1.Size = new System.Drawing.Size(57, 13);
             this.lblDoeltype1.TabIndex = 34;
             this.lblDoeltype1.Tag = "lblDoeltype";
-            this.lblDoeltype1.Text = "Type onderwijsdoel:";
+            this.lblDoeltype1.Text = "Type doel:";
             // 
             // cmdSave1
             // 
             this.cmdSave1.Location = new System.Drawing.Point(6, 32);
             this.cmdSave1.Name = "cmdSave1";
-            this.cmdSave1.Size = new System.Drawing.Size(105, 29);
+            this.cmdSave1.Size = new System.Drawing.Size(95, 29);
             this.cmdSave1.TabIndex = 33;
             this.cmdSave1.Tag = "cmdSave";
             this.cmdSave1.Text = "Doel opslaan";
@@ -275,9 +301,9 @@
             this.lstCompetenties1.BackColor = System.Drawing.SystemColors.Window;
             this.lstCompetenties1.FormattingEnabled = true;
             this.lstCompetenties1.IntegralHeight = false;
-            this.lstCompetenties1.Location = new System.Drawing.Point(1141, 32);
+            this.lstCompetenties1.Location = new System.Drawing.Point(1057, 32);
             this.lstCompetenties1.Name = "lstCompetenties1";
-            this.lstCompetenties1.Size = new System.Drawing.Size(193, 62);
+            this.lstCompetenties1.Size = new System.Drawing.Size(156, 62);
             this.lstCompetenties1.TabIndex = 29;
             this.lstCompetenties1.Tag = "lstCompetenties";
             this.lstCompetenties1.Click += new System.EventHandler(this.lstCompetenties_Click);
@@ -287,9 +313,9 @@
             this.lstBoKS1.BackColor = System.Drawing.SystemColors.Window;
             this.lstBoKS1.FormattingEnabled = true;
             this.lstBoKS1.IntegralHeight = false;
-            this.lstBoKS1.Location = new System.Drawing.Point(1044, 32);
+            this.lstBoKS1.Location = new System.Drawing.Point(961, 32);
             this.lstBoKS1.Name = "lstBoKS1";
-            this.lstBoKS1.Size = new System.Drawing.Size(91, 62);
+            this.lstBoKS1.Size = new System.Drawing.Size(90, 62);
             this.lstBoKS1.TabIndex = 28;
             this.lstBoKS1.Tag = "lstBoKS";
             this.lstBoKS1.Click += new System.EventHandler(this.lstBoKS_Click);
@@ -297,17 +323,17 @@
             // lblCompetenties1
             // 
             this.lblCompetenties1.AutoSize = true;
-            this.lblCompetenties1.Location = new System.Drawing.Point(1137, 16);
+            this.lblCompetenties1.Location = new System.Drawing.Point(1054, 16);
             this.lblCompetenties1.Name = "lblCompetenties1";
-            this.lblCompetenties1.Size = new System.Drawing.Size(170, 13);
+            this.lblCompetenties1.Size = new System.Drawing.Size(146, 13);
             this.lblCompetenties1.TabIndex = 27;
             this.lblCompetenties1.Tag = "lblCompetenties";
-            this.lblCompetenties1.Text = "Competenties/gedragskenmerken:";
+            this.lblCompetenties1.Text = "Competenties/gedragskenm.:";
             // 
             // lblBoKS1
             // 
             this.lblBoKS1.AutoSize = true;
-            this.lblBoKS1.Location = new System.Drawing.Point(1041, 16);
+            this.lblBoKS1.Location = new System.Drawing.Point(958, 16);
             this.lblBoKS1.Name = "lblBoKS1";
             this.lblBoKS1.Size = new System.Drawing.Size(64, 13);
             this.lblBoKS1.TabIndex = 26;
@@ -317,7 +343,7 @@
             // lblWeging1
             // 
             this.lblWeging1.AutoSize = true;
-            this.lblWeging1.Location = new System.Drawing.Point(835, 16);
+            this.lblWeging1.Location = new System.Drawing.Point(752, 16);
             this.lblWeging1.Name = "lblWeging1";
             this.lblWeging1.Size = new System.Drawing.Size(47, 13);
             this.lblWeging1.TabIndex = 25;
@@ -327,7 +353,7 @@
             // 
             // txtWeging1
             // 
-            this.txtWeging1.Location = new System.Drawing.Point(838, 32);
+            this.txtWeging1.Location = new System.Drawing.Point(755, 32);
             this.txtWeging1.Name = "txtWeging1";
             this.txtWeging1.Size = new System.Drawing.Size(38, 20);
             this.txtWeging1.TabIndex = 24;
@@ -340,7 +366,7 @@
             // linBloom1
             // 
             this.linBloom1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.linBloom1.Location = new System.Drawing.Point(884, 32);
+            this.linBloom1.Location = new System.Drawing.Point(801, 32);
             this.linBloom1.Name = "linBloom1";
             this.linBloom1.Size = new System.Drawing.Size(150, 1);
             this.linBloom1.TabIndex = 23;
@@ -349,7 +375,7 @@
             // lblBloom1
             // 
             this.lblBloom1.AutoSize = true;
-            this.lblBloom1.Location = new System.Drawing.Point(881, 16);
+            this.lblBloom1.Location = new System.Drawing.Point(798, 16);
             this.lblBloom1.Name = "lblBloom1";
             this.lblBloom1.Size = new System.Drawing.Size(106, 13);
             this.lblBloom1.TabIndex = 22;
@@ -359,7 +385,7 @@
             // chkCreeren1
             // 
             this.chkCreeren1.AutoSize = true;
-            this.chkCreeren1.Location = new System.Drawing.Point(964, 73);
+            this.chkCreeren1.Location = new System.Drawing.Point(881, 73);
             this.chkCreeren1.Name = "chkCreeren1";
             this.chkCreeren1.Size = new System.Drawing.Size(63, 17);
             this.chkCreeren1.TabIndex = 21;
@@ -371,7 +397,7 @@
             // chkEvalueren1
             // 
             this.chkEvalueren1.AutoSize = true;
-            this.chkEvalueren1.Location = new System.Drawing.Point(964, 55);
+            this.chkEvalueren1.Location = new System.Drawing.Point(881, 55);
             this.chkEvalueren1.Name = "chkEvalueren1";
             this.chkEvalueren1.Size = new System.Drawing.Size(74, 17);
             this.chkEvalueren1.TabIndex = 20;
@@ -383,7 +409,7 @@
             // chkAnalyseren1
             // 
             this.chkAnalyseren1.AutoSize = true;
-            this.chkAnalyseren1.Location = new System.Drawing.Point(964, 37);
+            this.chkAnalyseren1.Location = new System.Drawing.Point(881, 37);
             this.chkAnalyseren1.Name = "chkAnalyseren1";
             this.chkAnalyseren1.Size = new System.Drawing.Size(78, 17);
             this.chkAnalyseren1.TabIndex = 19;
@@ -395,7 +421,7 @@
             // chkToepassen1
             // 
             this.chkToepassen1.AutoSize = true;
-            this.chkToepassen1.Location = new System.Drawing.Point(884, 73);
+            this.chkToepassen1.Location = new System.Drawing.Point(801, 73);
             this.chkToepassen1.Name = "chkToepassen1";
             this.chkToepassen1.Size = new System.Drawing.Size(79, 17);
             this.chkToepassen1.TabIndex = 18;
@@ -407,7 +433,7 @@
             // chkBegrijpen1
             // 
             this.chkBegrijpen1.AutoSize = true;
-            this.chkBegrijpen1.Location = new System.Drawing.Point(884, 55);
+            this.chkBegrijpen1.Location = new System.Drawing.Point(801, 55);
             this.chkBegrijpen1.Name = "chkBegrijpen1";
             this.chkBegrijpen1.Size = new System.Drawing.Size(70, 17);
             this.chkBegrijpen1.TabIndex = 17;
@@ -419,7 +445,7 @@
             // chkOnthouden1
             // 
             this.chkOnthouden1.AutoSize = true;
-            this.chkOnthouden1.Location = new System.Drawing.Point(884, 37);
+            this.chkOnthouden1.Location = new System.Drawing.Point(801, 37);
             this.chkOnthouden1.Name = "chkOnthouden1";
             this.chkOnthouden1.Size = new System.Drawing.Size(79, 17);
             this.chkOnthouden1.TabIndex = 16;
@@ -431,9 +457,10 @@
             // cmdDelete1
             // 
             this.cmdDelete1.Enabled = false;
+            this.cmdDelete1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmdDelete1.Location = new System.Drawing.Point(6, 65);
             this.cmdDelete1.Name = "cmdDelete1";
-            this.cmdDelete1.Size = new System.Drawing.Size(105, 29);
+            this.cmdDelete1.Size = new System.Drawing.Size(95, 29);
             this.cmdDelete1.TabIndex = 14;
             this.cmdDelete1.Tag = "cmdDelete";
             this.cmdDelete1.Text = "Doel verwijderen";
@@ -443,7 +470,7 @@
             // lblOnderwerpen1
             // 
             this.lblOnderwerpen1.AutoSize = true;
-            this.lblOnderwerpen1.Location = new System.Drawing.Point(530, 16);
+            this.lblOnderwerpen1.Location = new System.Drawing.Point(476, 16);
             this.lblOnderwerpen1.Name = "lblOnderwerpen1";
             this.lblOnderwerpen1.Size = new System.Drawing.Size(74, 13);
             this.lblOnderwerpen1.TabIndex = 13;
@@ -453,7 +480,7 @@
             // lblOmschrijving1
             // 
             this.lblOmschrijving1.AutoSize = true;
-            this.lblOmschrijving1.Location = new System.Drawing.Point(224, 16);
+            this.lblOmschrijving1.Location = new System.Drawing.Point(201, 16);
             this.lblOmschrijving1.Name = "lblOmschrijving1";
             this.lblOmschrijving1.Size = new System.Drawing.Size(67, 13);
             this.lblOmschrijving1.TabIndex = 12;
@@ -462,11 +489,11 @@
             // 
             // txtOnderwijsdoel1
             // 
-            this.txtOnderwijsdoel1.Location = new System.Drawing.Point(226, 32);
+            this.txtOnderwijsdoel1.Location = new System.Drawing.Point(203, 32);
             this.txtOnderwijsdoel1.Multiline = true;
             this.txtOnderwijsdoel1.Name = "txtOnderwijsdoel1";
             this.txtOnderwijsdoel1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtOnderwijsdoel1.Size = new System.Drawing.Size(300, 62);
+            this.txtOnderwijsdoel1.Size = new System.Drawing.Size(270, 62);
             this.txtOnderwijsdoel1.TabIndex = 11;
             this.txtOnderwijsdoel1.Tag = "txtOnderwijsdoel";
             this.txtOnderwijsdoel1.TextChanged += new System.EventHandler(this.txtGeneral_TextChanged);
@@ -475,7 +502,7 @@
             // 
             this.cmdAdd.Location = new System.Drawing.Point(6, 19);
             this.cmdAdd.Name = "cmdAdd";
-            this.cmdAdd.Size = new System.Drawing.Size(105, 29);
+            this.cmdAdd.Size = new System.Drawing.Size(95, 29);
             this.cmdAdd.TabIndex = 12;
             this.cmdAdd.Text = "Doel toevoegen";
             this.cmdAdd.UseVisualStyleBackColor = true;
@@ -494,7 +521,7 @@
             this.grpBediening.Controls.Add(this.lblTotaal);
             this.grpBediening.Controls.Add(this.cmdDoelenOpslaan);
             this.grpBediening.Controls.Add(this.cmdAdd);
-            this.grpBediening.Location = new System.Drawing.Point(165, 107);
+            this.grpBediening.Location = new System.Drawing.Point(156, 107);
             this.grpBediening.Name = "grpBediening";
             this.grpBediening.Size = new System.Drawing.Size(1340, 54);
             this.grpBediening.TabIndex = 13;
@@ -503,25 +530,25 @@
             // 
             // txtTijdstip
             // 
-            this.txtTijdstip.Location = new System.Drawing.Point(1228, 24);
+            this.txtTijdstip.Location = new System.Drawing.Point(1219, 24);
             this.txtTijdstip.Name = "txtTijdstip";
             this.txtTijdstip.ReadOnly = true;
-            this.txtTijdstip.Size = new System.Drawing.Size(106, 20);
+            this.txtTijdstip.Size = new System.Drawing.Size(115, 20);
             this.txtTijdstip.TabIndex = 38;
             // 
             // txtControleur
             // 
-            this.txtControleur.Location = new System.Drawing.Point(1063, 24);
+            this.txtControleur.Location = new System.Drawing.Point(1057, 24);
             this.txtControleur.Name = "txtControleur";
             this.txtControleur.ReadOnly = true;
-            this.txtControleur.Size = new System.Drawing.Size(159, 20);
+            this.txtControleur.Size = new System.Drawing.Size(156, 20);
             this.txtControleur.TabIndex = 37;
             // 
             // chkGecontroleerd
             // 
             this.chkGecontroleerd.AutoCheck = false;
             this.chkGecontroleerd.AutoSize = true;
-            this.chkGecontroleerd.Location = new System.Drawing.Point(964, 26);
+            this.chkGecontroleerd.Location = new System.Drawing.Point(962, 26);
             this.chkGecontroleerd.Name = "chkGecontroleerd";
             this.chkGecontroleerd.Size = new System.Drawing.Size(93, 17);
             this.chkGecontroleerd.TabIndex = 36;
@@ -534,7 +561,7 @@
             this.txtTotaal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.txtTotaal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtTotaal.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.txtTotaal.Location = new System.Drawing.Point(838, 26);
+            this.txtTotaal.Location = new System.Drawing.Point(755, 26);
             this.txtTotaal.Name = "txtTotaal";
             this.txtTotaal.Size = new System.Drawing.Size(38, 20);
             this.txtTotaal.TabIndex = 35;
@@ -545,7 +572,7 @@
             // lblTotaal
             // 
             this.lblTotaal.AutoSize = true;
-            this.lblTotaal.Location = new System.Drawing.Point(836, 11);
+            this.lblTotaal.Location = new System.Drawing.Point(752, 11);
             this.lblTotaal.Name = "lblTotaal";
             this.lblTotaal.Size = new System.Drawing.Size(40, 13);
             this.lblTotaal.TabIndex = 34;
@@ -555,9 +582,9 @@
             // cmdDoelenOpslaan
             // 
             this.cmdDoelenOpslaan.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.cmdDoelenOpslaan.Location = new System.Drawing.Point(116, 19);
+            this.cmdDoelenOpslaan.Location = new System.Drawing.Point(107, 19);
             this.cmdDoelenOpslaan.Name = "cmdDoelenOpslaan";
-            this.cmdDoelenOpslaan.Size = new System.Drawing.Size(114, 29);
+            this.cmdDoelenOpslaan.Size = new System.Drawing.Size(110, 29);
             this.cmdDoelenOpslaan.TabIndex = 14;
             this.cmdDoelenOpslaan.Text = "Alle doelen opslaan";
             this.cmdDoelenOpslaan.UseVisualStyleBackColor = true;
@@ -570,7 +597,7 @@
             this.grpCursus.Controls.Add(this.grpCursusnaam);
             this.grpCursus.Controls.Add(this.grpTraject);
             this.grpCursus.Controls.Add(this.grpCursustype);
-            this.grpCursus.Controls.Add(this.grpToetcodes);
+            this.grpCursus.Controls.Add(this.grpToetscodes);
             this.grpCursus.Controls.Add(this.grpCursusBlok);
             this.grpCursus.Location = new System.Drawing.Point(661, 665);
             this.grpCursus.Name = "grpCursus";
@@ -718,15 +745,15 @@
             this.btnVak.Text = "Vak";
             this.btnVak.UseVisualStyleBackColor = true;
             // 
-            // grpToetcodes
+            // grpToetscodes
             // 
-            this.grpToetcodes.Controls.Add(this.lstCursusToetsen);
-            this.grpToetcodes.Location = new System.Drawing.Point(644, 19);
-            this.grpToetcodes.Name = "grpToetcodes";
-            this.grpToetcodes.Size = new System.Drawing.Size(191, 89);
-            this.grpToetcodes.TabIndex = 8;
-            this.grpToetcodes.TabStop = false;
-            this.grpToetcodes.Text = "Toestcodes:";
+            this.grpToetscodes.Controls.Add(this.lstCursusToetsen);
+            this.grpToetscodes.Location = new System.Drawing.Point(644, 19);
+            this.grpToetscodes.Name = "grpToetscodes";
+            this.grpToetscodes.Size = new System.Drawing.Size(191, 89);
+            this.grpToetscodes.TabIndex = 8;
+            this.grpToetscodes.TabStop = false;
+            this.grpToetscodes.Text = "Toetscodes:";
             // 
             // lstCursusToetsen
             // 
@@ -924,15 +951,15 @@
             this.txtToetsvorm.Size = new System.Drawing.Size(94, 20);
             this.txtToetsvorm.TabIndex = 6;
             // 
-            // grpVakcodes
+            // grpModulelijst
             // 
-            this.grpVakcodes.Controls.Add(this.lstCursuscodes);
-            this.grpVakcodes.Location = new System.Drawing.Point(3, 167);
-            this.grpVakcodes.Name = "grpVakcodes";
-            this.grpVakcodes.Size = new System.Drawing.Size(155, 482);
-            this.grpVakcodes.TabIndex = 16;
-            this.grpVakcodes.TabStop = false;
-            this.grpVakcodes.Text = "(2) Selecteer Module:";
+            this.grpModulelijst.Controls.Add(this.lstCursuscodes);
+            this.grpModulelijst.Location = new System.Drawing.Point(3, 167);
+            this.grpModulelijst.Name = "grpModulelijst";
+            this.grpModulelijst.Size = new System.Drawing.Size(147, 482);
+            this.grpModulelijst.TabIndex = 16;
+            this.grpModulelijst.TabStop = false;
+            this.grpModulelijst.Text = "(2) Selecteer Module:";
             // 
             // lstCursuscodes
             // 
@@ -940,7 +967,7 @@
             this.lstCursuscodes.IntegralHeight = false;
             this.lstCursuscodes.Location = new System.Drawing.Point(6, 19);
             this.lstCursuscodes.Name = "lstCursuscodes";
-            this.lstCursuscodes.Size = new System.Drawing.Size(142, 458);
+            this.lstCursuscodes.Size = new System.Drawing.Size(134, 458);
             this.lstCursuscodes.TabIndex = 2;
             this.lstCursuscodes.SelectedIndexChanged += new System.EventHandler(this.lstCursuscodes_SelectedIndexChanged);
             // 
@@ -959,7 +986,7 @@
             this.grpBlokSelectie.Controls.Add(this.btnAll);
             this.grpBlokSelectie.Location = new System.Drawing.Point(3, 655);
             this.grpBlokSelectie.Name = "grpBlokSelectie";
-            this.grpBlokSelectie.Size = new System.Drawing.Size(155, 141);
+            this.grpBlokSelectie.Size = new System.Drawing.Size(147, 141);
             this.grpBlokSelectie.TabIndex = 17;
             this.grpBlokSelectie.TabStop = false;
             this.grpBlokSelectie.Text = "(1) Selecteer Blok:";
@@ -1116,12 +1143,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1510, 798);
             this.Controls.Add(this.grpBlokSelectie);
-            this.Controls.Add(this.grpVakcodes);
+            this.Controls.Add(this.grpModulelijst);
             this.Controls.Add(this.grpToets);
             this.Controls.Add(this.grpCursus);
             this.Controls.Add(this.grpBediening);
             this.Controls.Add(this.grpDoel1);
-            this.Controls.Add(this.grpToetscodes);
+            this.Controls.Add(this.grpToetslijst);
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(1526, 837);
             this.MinimizeBox = false;
@@ -1133,7 +1160,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
             this.Load += new System.EventHandler(this.frmMain_Load);
-            this.grpToetscodes.ResumeLayout(false);
+            this.grpToetslijst.ResumeLayout(false);
             this.grpDoel1.ResumeLayout(false);
             this.grpDoel1.PerformLayout();
             this.grpBediening.ResumeLayout(false);
@@ -1149,7 +1176,7 @@
             this.grpTraject.PerformLayout();
             this.grpCursustype.ResumeLayout(false);
             this.grpCursustype.PerformLayout();
-            this.grpToetcodes.ResumeLayout(false);
+            this.grpToetscodes.ResumeLayout(false);
             this.grpCursusBlok.ResumeLayout(false);
             this.grpCursusBlok.PerformLayout();
             this.grpToets.ResumeLayout(false);
@@ -1167,7 +1194,7 @@
             this.grpToetscode.PerformLayout();
             this.grpToetsvorm.ResumeLayout(false);
             this.grpToetsvorm.PerformLayout();
-            this.grpVakcodes.ResumeLayout(false);
+            this.grpModulelijst.ResumeLayout(false);
             this.grpBlokSelectie.ResumeLayout(false);
             this.grpBlokSelectie.PerformLayout();
             this.ResumeLayout(false);
@@ -1175,7 +1202,7 @@
         }
 
         #endregion
-        private System.Windows.Forms.GroupBox grpToetscodes;
+        private System.Windows.Forms.GroupBox grpToetslijst;
         private System.Windows.Forms.ListBox lstToetscodes;
         private System.Windows.Forms.TextBox txtOnderwerpen1;
         private System.Windows.Forms.GroupBox grpDoel1;
@@ -1221,7 +1248,7 @@
         private System.Windows.Forms.GroupBox grpCursustype;
         private System.Windows.Forms.RadioButton btnProject;
         private System.Windows.Forms.RadioButton btnVak;
-        private System.Windows.Forms.GroupBox grpToetcodes;
+        private System.Windows.Forms.GroupBox grpToetscodes;
         private System.Windows.Forms.ListBox lstCursusToetsen;
         private System.Windows.Forms.GroupBox grpCursusBlok;
         private System.Windows.Forms.TextBox txtCursusBlok;
@@ -1244,7 +1271,7 @@
         private System.Windows.Forms.TextBox txtECs;
         private System.Windows.Forms.GroupBox grpKeuzedeel;
         private System.Windows.Forms.TextBox txtKeuzedeel;
-        private System.Windows.Forms.GroupBox grpVakcodes;
+        private System.Windows.Forms.GroupBox grpModulelijst;
         private System.Windows.Forms.ListBox lstCursuscodes;
         private System.Windows.Forms.GroupBox grpBlokSelectie;
         private System.Windows.Forms.RadioButton btnBlok12;
@@ -1261,5 +1288,7 @@
         private System.Windows.Forms.CheckBox chkGecontroleerd;
         private System.Windows.Forms.TextBox txtTijdstip;
         private System.Windows.Forms.TextBox txtControleur;
+        private System.Windows.Forms.Label lblBeroepsproducten1;
+        private System.Windows.Forms.ListBox lstBeroepsproducten1;
     }
 }

@@ -74,6 +74,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="frmBeroepsproductkoppeling.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmBeroepsproductkoppeling.Designer.cs">
+      <DependentUpon>frmBeroepsproductkoppeling.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmBoKSkoppeling.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,6 +108,9 @@
     <Compile Include="ListViewColumnSorter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmBeroepsproductkoppeling.resx">
+      <DependentUpon>frmBeroepsproductkoppeling.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmBoKSkoppeling.resx">
       <DependentUpon>frmBoKSkoppeling.cs</DependentUpon>
     </EmbeddedResource>

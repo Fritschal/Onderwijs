@@ -491,7 +491,7 @@
             this.Name = "frmCompetentiekoppeling";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Competentiekoppeling";
+            this.Text = "Koppeling competenties";
             this.Load += new System.EventHandler(this.frmCompetentiekoppeling_Load);
             this.tabCompetenties.ResumeLayout(false);
             this.tabINI.ResumeLayout(false);
