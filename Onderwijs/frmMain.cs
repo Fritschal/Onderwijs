@@ -10,6 +10,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.IO;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Onderwijs
 {
@@ -25,6 +27,8 @@ namespace Onderwijs
         private bool blnErIsIetsGewijzigd = false;
         private bool selectieGecanceld = false;
         private int blokFilter = 0;
+        private String pathToInstallation = Environment.CurrentDirectory;
+        private String formTitel;
 
         public frmMain()
         {
@@ -39,7 +43,8 @@ namespace Onderwijs
 
             FileVersionInfo fviAssembly = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
-            this.Text = "Onderwijs ET/TI  (versie " + fviAssembly.FileMajorPart + "." + fviAssembly.FileBuildPart + ")";
+            formTitel = "Onderwijs ET/TI  (versie " + fviAssembly.FileMajorPart + "." + fviAssembly.FileBuildPart + ")";
+            this.Text = formTitel;
             blnStartupReady = true;
         }
 
@@ -1183,6 +1188,199 @@ namespace Onderwijs
                 Program.logMessage("Rollback: " + Program.removeSpecialChars(strQuery), cnnOnderwijs);
                 MessageBox.Show("Iets gaat hier niet chocotof!", "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void cmdExport_Click(object sender, EventArgs e)
+        {
+            //Export het huidige blad naar een Excel-bestand:
+            Excel.Application xlApplication = new Excel.Application();
+            Excel.Workbook xlWorkbook;
+            Excel.Worksheet xlWorksheet;
+            object misValue = System.Reflection.Missing.Value;
+
+            this.Text = formTitel + " Exporteren gestart...";
+
+            try //Kopieer leeg bestand (tm.xlsx) naar tijdelijk bestand (tijdelijk.xlsx):
+            {
+                File.Copy(pathToInstallation + @"\tm.xlsx", pathToInstallation + @"\tijdelijk.xlsx", true);
+                File.SetAttributes(pathToInstallation + @"\tijdelijk.xlsx", File.GetAttributes(pathToInstallation + @"\tijdelijk.xlsx") & ~FileAttributes.ReadOnly);
+            }
+            catch
+            {
+                String errorMessage = "Iets gaat er mis bij het maken van een tijdelijk bestand!";
+                MessageBox.Show(errorMessage, "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Program.logMessage("Exporteren - MISLUKT: " + errorMessage, cnnOnderwijs);
+                xlApplication.Quit();
+                releaseObject(xlApplication);
+                this.Text = formTitel + " Exporteren mislukt";
+                tmrFormTitel.Enabled = true;
+                return;
+            }
+
+            try //Open Workbook:
+            {
+                xlWorkbook = xlApplication.Workbooks.Open(pathToInstallation + @"\tijdelijk.xlsx");
+            }
+            catch
+            {
+                String errorMessage = "Iets gaat er mis bij het openen van xlWorkbook!";
+                MessageBox.Show(errorMessage, "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Program.logMessage("Exporteren - MISLUKT: " + errorMessage, cnnOnderwijs);
+                xlApplication.Quit();
+                releaseObject(xlApplication);
+                this.Text = formTitel + " Exporteren mislukt";
+                tmrFormTitel.Enabled = true;
+                return;
+            }
+
+            try //Select Worksheet:
+            {
+                xlWorksheet = (Excel.Worksheet)xlWorkbook.Worksheets.get_Item("Toetsmatrijs");
+            }
+            catch
+            {
+                String errorMessage = "Iets gaat er mis bij het selecteren van xlWorksheet!";
+                MessageBox.Show(errorMessage, "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Program.logMessage("Exporteren - MISLUKT: " + errorMessage, cnnOnderwijs);
+                xlApplication.Quit();
+                releaseObject(xlWorkbook);
+                releaseObject(xlApplication);
+                this.Text = formTitel + " Exporteren mislukt";
+                tmrFormTitel.Enabled = true;
+                return;
+            }
+
+            //Toestinfo:
+            xlWorksheet.Cells[1, 1] = "TOETSMATRIJS (export d.d. " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ")";
+            xlWorksheet.Cells[3, 2] = txtToetscode.Text;
+            xlWorksheet.Cells[4, 2] = txtCursuscode.Text;
+            xlWorksheet.Cells[5, 2] = txtBlok.Text;
+            xlWorksheet.Cells[6, 2] = txtToetsvorm.Text;
+            xlWorksheet.Cells[7, 2] = txtBeoordelingswijze.Text;
+
+            for (int doel = 1; doel <= intDoel; doel++)
+            {
+                xlWorksheet.Cells[9 + doel, 1] = ((TextBox)Controls["grpDoel" + doel.ToString()].Controls["txtOnderwijsdoel" + doel.ToString()]).Text;
+                xlWorksheet.Cells[9 + doel, 3] = ((TextBox)Controls["grpDoel" + doel.ToString()].Controls["txtOnderwerpen" + doel.ToString()]).Text;
+                xlWorksheet.Cells[9 + doel, 4] = ((TextBox)Controls["grpDoel" + doel.ToString()].Controls["txtWeging" + doel.ToString()]).Text;
+                xlWorksheet.Cells[9 + doel, 5] = ((CheckBox)Controls["grpDoel" + doel.ToString()].Controls["chkOnthouden" + doel.ToString()]).Checked ? "X" : "";
+                xlWorksheet.Cells[9 + doel, 6] = ((CheckBox)Controls["grpDoel" + doel.ToString()].Controls["chkBegrijpen" + doel.ToString()]).Checked ? "X" : "";
+                xlWorksheet.Cells[9 + doel, 7] = ((CheckBox)Controls["grpDoel" + doel.ToString()].Controls["chkToepassen" + doel.ToString()]).Checked ? "X" : "";
+                xlWorksheet.Cells[9 + doel, 8] = ((CheckBox)Controls["grpDoel" + doel.ToString()].Controls["chkAnalyseren" + doel.ToString()]).Checked ? "X" : "";
+                xlWorksheet.Cells[9 + doel, 9] = ((CheckBox)Controls["grpDoel" + doel.ToString()].Controls["chkEvalueren" + doel.ToString()]).Checked ? "X" : "";
+                xlWorksheet.Cells[9 + doel, 10] = ((CheckBox)Controls["grpDoel" + doel.ToString()].Controls["chkCreeren" + doel.ToString()]).Checked ? "X" : "";
+                String strLijst = "";
+                foreach (string strItem in ((ListBox)Controls["grpDoel" + doel.ToString()].Controls["lstBoKS" + doel.ToString()]).Items)
+                {
+                    strLijst += strItem + "\n";
+                }
+                xlWorksheet.Cells[9 + doel, 11] = strLijst;
+                strLijst = "";
+                foreach (string strItem in ((ListBox)Controls["grpDoel" + doel.ToString()].Controls["lstCompetenties" + doel.ToString()]).Items)
+                {
+                    strLijst += strItem + "\n";
+                }
+                xlWorksheet.Cells[9 + doel, 12] = strLijst;
+                strLijst = "";
+                foreach (string strItem in ((ListBox)Controls["grpDoel" + doel.ToString()].Controls["lstBeroepsproducten" + doel.ToString()]).Items)
+                {
+                    strLijst += strItem + "\n";
+                }
+                xlWorksheet.Cells[9 + doel, 13] = strLijst;
+            }
+
+            try //Save As Workbook:
+            {
+                saveToetsmatrijs.FileName = "Toetsmatrijs " + txtToetscode.Text + ".xlsx";
+
+                if (saveToetsmatrijs.ShowDialog() == DialogResult.OK)
+                {
+                    xlWorkbook.SaveCopyAs(saveToetsmatrijs.FileName);
+                }
+                else
+                {
+                    this.Text = formTitel + " Exporteren geannuleerd";
+                    this.Refresh();
+                }
+            }
+            catch
+            {
+                String errorMessage = "Iets gaat er mis bij het opslaan van xlWorkbook!";
+                MessageBox.Show(errorMessage, "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Program.logMessage("Exporteren - MISLUKT: " + errorMessage, cnnOnderwijs);
+                this.Text = formTitel + " Exporteren mislukt";
+            }
+
+            try //Close Workbook:
+            {
+                xlWorkbook.Close(false, misValue, misValue);
+            }
+            catch
+            {
+                String errorMessage = "Iets gaat er mis bij het sluiten van xlWorkbook!";
+                MessageBox.Show(errorMessage, "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Program.logMessage("Exporteren - MISLUKT: " + errorMessage, cnnOnderwijs);
+                this.Text = formTitel + " Afbouwen mislukt";
+            }
+
+            try //Quit Excel:
+            {
+                xlApplication.Quit();
+            }
+            catch
+            {
+                String errorMessage = "Iets gaat er mis bij het afsluiten van xlApplication!";
+                MessageBox.Show(errorMessage, "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Program.logMessage("Exporteren - MISLUKT: " + errorMessage, cnnOnderwijs);
+                this.Text = formTitel + " Afbouwen mislukt";
+            }
+
+            releaseObject(xlWorksheet);
+            releaseObject(xlWorkbook);
+            releaseObject(xlApplication);
+
+            try //Delete tijdelijk.xlsx:
+            {
+                File.Delete(pathToInstallation + @"\tijdelijk.xlsx");
+            }
+            catch
+            {
+                String errorMessage = "Iets gaat er mis bij het verwijderen van het tijdelijke bestand!";
+                MessageBox.Show(errorMessage, "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Program.logMessage("Exporteren - MISLUKT: " + errorMessage, cnnOnderwijs);
+                this.Text = formTitel + " Afbouwen mislukt";
+            }
+
+            if (!(this.Text.Contains("mislukt") || this.Text.Contains("geannuleerd")))
+            {
+                this.Text = formTitel + " Exporteren gereed";
+                Program.logMessage("Toetsmatrijs van Module " + txtCursuscode.Text + ", Toetscode " + txtToetscode.Text + " is geëxporteerd.", cnnOnderwijs);
+            }
+            tmrFormTitel.Enabled = true;
+        }
+
+        private void releaseObject(object obj)
+        {
+            try
+            {
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+                obj = null;
+            }
+            catch (Exception ex)
+            {
+                obj = null;
+                MessageBox.Show("Unable to release the Object " + ex.ToString());
+            }
+            finally
+            {
+                GC.Collect();
+            }
+        }
+
+        private void tmrFormTitel_Tick(object sender, EventArgs e)
+        {
+            this.Text = formTitel;
+            tmrFormTitel.Enabled = false;
         }
     }
 }

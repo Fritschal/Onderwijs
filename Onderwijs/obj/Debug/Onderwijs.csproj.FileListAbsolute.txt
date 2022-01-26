@@ -15,3 +15,6 @@ D:\Onderwijs\OnderwijsETTI\Onderwijs\Onderwijs\bin\Debug\Onderwijs.application
 D:\Onderwijs\OnderwijsETTI\Onderwijs\Onderwijs\obj\Debug\Onderwijs.exe.manifest
 D:\Onderwijs\OnderwijsETTI\Onderwijs\Onderwijs\obj\Debug\Onderwijs.application
 D:\Onderwijs\OnderwijsETTI\Onderwijs\Onderwijs\obj\Debug\Onderwijs.csproj.AssemblyReference.cache
+D:\Onderwijs\OnderwijsETTI\Onderwijs\Onderwijs\obj\Debug\Onderwijs.csproj.ResolveComReference.cache
+D:\Onderwijs\OnderwijsETTI\Onderwijs\Onderwijs\obj\Debug\Onderwijs.frmBeroepsproductkoppeling.resources
+D:\Onderwijs\OnderwijsETTI\Onderwijs\Onderwijs\bin\Debug\tm.xlsx

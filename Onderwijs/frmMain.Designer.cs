@@ -62,6 +62,7 @@
             this.cmdAdd = new System.Windows.Forms.Button();
             this.ttpOnderwijs = new System.Windows.Forms.ToolTip(this.components);
             this.grpBediening = new System.Windows.Forms.GroupBox();
+            this.cmdExport = new System.Windows.Forms.Button();
             this.txtTijdstip = new System.Windows.Forms.TextBox();
             this.txtControleur = new System.Windows.Forms.TextBox();
             this.chkGecontroleerd = new System.Windows.Forms.CheckBox();
@@ -117,6 +118,8 @@
             this.btnBlok2 = new System.Windows.Forms.RadioButton();
             this.btnBlok1 = new System.Windows.Forms.RadioButton();
             this.btnAll = new System.Windows.Forms.RadioButton();
+            this.saveToetsmatrijs = new System.Windows.Forms.SaveFileDialog();
+            this.tmrFormTitel = new System.Windows.Forms.Timer(this.components);
             this.grpToetslijst.SuspendLayout();
             this.grpDoel1.SuspendLayout();
             this.grpBediening.SuspendLayout();
@@ -514,6 +517,7 @@
             // 
             // grpBediening
             // 
+            this.grpBediening.Controls.Add(this.cmdExport);
             this.grpBediening.Controls.Add(this.txtTijdstip);
             this.grpBediening.Controls.Add(this.txtControleur);
             this.grpBediening.Controls.Add(this.chkGecontroleerd);
@@ -527,6 +531,17 @@
             this.grpBediening.TabIndex = 13;
             this.grpBediening.TabStop = false;
             this.grpBediening.Text = "Doelen:";
+            // 
+            // cmdExport
+            // 
+            this.cmdExport.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.cmdExport.Location = new System.Drawing.Point(223, 19);
+            this.cmdExport.Name = "cmdExport";
+            this.cmdExport.Size = new System.Drawing.Size(140, 29);
+            this.cmdExport.TabIndex = 39;
+            this.cmdExport.Text = "Toetsmatrijs exporteren";
+            this.cmdExport.UseVisualStyleBackColor = true;
+            this.cmdExport.Click += new System.EventHandler(this.cmdExport_Click);
             // 
             // txtTijdstip
             // 
@@ -1137,6 +1152,18 @@
             this.btnAll.UseVisualStyleBackColor = true;
             this.btnAll.Click += new System.EventHandler(this.blokSelectie);
             // 
+            // saveToetsmatrijs
+            // 
+            this.saveToetsmatrijs.AutoUpgradeEnabled = false;
+            this.saveToetsmatrijs.DereferenceLinks = false;
+            this.saveToetsmatrijs.Filter = "Excelbestand (*.xlsx)|*.xlsx|Alle bestanden (*.*)|*.*";
+            this.saveToetsmatrijs.RestoreDirectory = true;
+            // 
+            // tmrFormTitel
+            // 
+            this.tmrFormTitel.Interval = 3000;
+            this.tmrFormTitel.Tick += new System.EventHandler(this.tmrFormTitel_Tick);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1290,5 +1317,8 @@
         private System.Windows.Forms.TextBox txtControleur;
         private System.Windows.Forms.Label lblBeroepsproducten1;
         private System.Windows.Forms.ListBox lstBeroepsproducten1;
+        private System.Windows.Forms.Button cmdExport;
+        private System.Windows.Forms.SaveFileDialog saveToetsmatrijs;
+        private System.Windows.Forms.Timer tmrFormTitel;
     }
 }
