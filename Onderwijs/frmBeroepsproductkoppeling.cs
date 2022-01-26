@@ -15,8 +15,8 @@ namespace Onderwijs
     public partial class frmBeroepsproductkoppeling : Form
     {
         private SqlConnection cnnOnderwijs = new SqlConnection("Data Source=" + Globals.DB_SERVER + ";Initial Catalog=" + Globals.DB_NAME + ";User ID=" + Globals.DB_USER + ";Password=" + Globals.DB_PASSWORD + ";MultipleActiveResultSets=true;");
-        private bool blnControlsReady = false;
-        private bool blnFormLoadReady = false;
+        //private bool blnControlsReady = false;
+        //private bool blnFormLoadReady = false;
         private int intDoelID;
         private bool blnErIsIetsGewijzigd = false;
 
@@ -35,7 +35,7 @@ namespace Onderwijs
             {
                 udsDynamischeVulling(intDoelID);
             }
-            blnFormLoadReady = true;
+            //blnFormLoadReady = true;
             blnErIsIetsGewijzigd = false;
         }
 

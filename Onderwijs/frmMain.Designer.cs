@@ -120,6 +120,7 @@
             this.btnAll = new System.Windows.Forms.RadioButton();
             this.saveToetsmatrijs = new System.Windows.Forms.SaveFileDialog();
             this.tmrFormTitel = new System.Windows.Forms.Timer(this.components);
+            this.printDialog = new System.Windows.Forms.PrintDialog();
             this.grpToetslijst.SuspendLayout();
             this.grpDoel1.SuspendLayout();
             this.grpBediening.SuspendLayout();
@@ -537,9 +538,9 @@
             this.cmdExport.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.cmdExport.Location = new System.Drawing.Point(223, 19);
             this.cmdExport.Name = "cmdExport";
-            this.cmdExport.Size = new System.Drawing.Size(140, 29);
+            this.cmdExport.Size = new System.Drawing.Size(220, 29);
             this.cmdExport.TabIndex = 39;
-            this.cmdExport.Text = "Toetsmatrijs exporteren";
+            this.cmdExport.Text = "Toetsmatrijs exporteren als Excel-bestand";
             this.cmdExport.UseVisualStyleBackColor = true;
             this.cmdExport.Click += new System.EventHandler(this.cmdExport_Click);
             // 
@@ -1161,7 +1162,7 @@
             // 
             // tmrFormTitel
             // 
-            this.tmrFormTitel.Interval = 3000;
+            this.tmrFormTitel.Interval = 2000;
             this.tmrFormTitel.Tick += new System.EventHandler(this.tmrFormTitel_Tick);
             // 
             // frmMain
@@ -1320,5 +1321,6 @@
         private System.Windows.Forms.Button cmdExport;
         private System.Windows.Forms.SaveFileDialog saveToetsmatrijs;
         private System.Windows.Forms.Timer tmrFormTitel;
+        private System.Windows.Forms.PrintDialog printDialog;
     }
 }

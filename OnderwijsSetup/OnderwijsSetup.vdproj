@@ -15,12 +15,6 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_0CA20BEBF3C14CA789AB6D8C5C99C7F1"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_262D575B935144088667B8D7FE8D7D89"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -29,6 +23,12 @@
         {
         "MsmKey" = "8:_50397DDC2C4AD99B965D6EA4CCAC7373"
         "OwnerKey" = "8:_262D575B935144088667B8D7FE8D7D89"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CACEB75C6E06452B97051A11CA4B0EDB"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -138,26 +138,6 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0CA20BEBF3C14CA789AB6D8C5C99C7F1"
-            {
-            "SourcePath" = "8:..\\Onderwijs\\tm.xlsx"
-            "TargetName" = "8:tm.xlsx"
-            "Tag" = "8:"
-            "Folder" = "8:_EEFE73C789884BBA9F132E06D3CFD04D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_50397DDC2C4AD99B965D6EA4CCAC7373"
             {
             "AssemblyRegister" = "3:1"
@@ -187,6 +167,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CACEB75C6E06452B97051A11CA4B0EDB"
+            {
+            "SourcePath" = "8:..\\Onderwijs\\bin\\Release\\tm.xlsx"
+            "TargetName" = "8:tm.xlsx"
+            "Tag" = "8:"
+            "Folder" = "8:_EEFE73C789884BBA9F132E06D3CFD04D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:TRUE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }
@@ -256,24 +256,24 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OnderwijsDB"
-        "ProductCode" = "8:{01DDBC32-BA36-4F65-9FBE-495845308165}"
-        "PackageCode" = "8:{439BBD93-248C-4F77-84D8-D83F9F2461E4}"
+        "ProductCode" = "8:{E4E591EE-3991-4865-B2C5-C1861E242D25}"
+        "PackageCode" = "8:{84073121-F9B6-4F0B-AF3E-FDC7B2D2061B}"
         "UpgradeCode" = "8:{6B928BC3-5123-4B72-89DF-40C11DD9A0C1}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
-        "DetectNewerInstalledVersion" = "11:TRUE"
+        "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.0"
+        "ProductVersion" = "8:3.0"
         "Manufacturer" = "8:ETTI"
         "ARPHELPTELEPHONE" = "8:"
-        "ARPHELPLINK" = "8:"
+        "ARPHELPLINK" = "8:https://www.avans.nl/studeren/opleidingen/elektrotechniek/voltijd"
         "Title" = "8:OnderwijsDB"
-        "Subject" = "8:"
+        "Subject" = "8:GUI naar Onderwijsdatabase ETTI. Alleen voor intern gebruik."
         "ARPCONTACT" = "8:Fritschal Terheijden"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:GUI naar Onderwijsdatabase ETTI"
-        "ARPURLINFOABOUT" = "8:"
+        "ARPURLINFOABOUT" = "8:https://www.avans.nl/studeren/opleidingen/elektrotechniek/voltijd"
         "ARPPRODUCTICON" = "8:"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"

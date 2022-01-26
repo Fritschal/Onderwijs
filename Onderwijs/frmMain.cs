@@ -28,6 +28,7 @@ namespace Onderwijs
         private bool selectieGecanceld = false;
         private int blokFilter = 0;
         private String pathToInstallation = Environment.CurrentDirectory;
+        private String pathToTemp = Path.GetTempPath();
         private String formTitel;
 
         public frmMain()
@@ -1202,8 +1203,8 @@ namespace Onderwijs
 
             try //Kopieer leeg bestand (tm.xlsx) naar tijdelijk bestand (tijdelijk.xlsx):
             {
-                File.Copy(pathToInstallation + @"\tm.xlsx", pathToInstallation + @"\tijdelijk.xlsx", true);
-                File.SetAttributes(pathToInstallation + @"\tijdelijk.xlsx", File.GetAttributes(pathToInstallation + @"\tijdelijk.xlsx") & ~FileAttributes.ReadOnly);
+                File.Copy(pathToInstallation + @"\tm.xlsx", pathToTemp + @"\tijdelijk.xlsx", true);
+                File.SetAttributes(pathToTemp + @"\tijdelijk.xlsx", File.GetAttributes(pathToTemp + @"\tijdelijk.xlsx") & ~FileAttributes.ReadOnly);
             }
             catch
             {
@@ -1219,7 +1220,7 @@ namespace Onderwijs
 
             try //Open Workbook:
             {
-                xlWorkbook = xlApplication.Workbooks.Open(pathToInstallation + @"\tijdelijk.xlsx");
+                xlWorkbook = xlApplication.Workbooks.Open(pathToTemp + @"\tijdelijk.xlsx");
             }
             catch
             {
@@ -1341,7 +1342,7 @@ namespace Onderwijs
 
             try //Delete tijdelijk.xlsx:
             {
-                File.Delete(pathToInstallation + @"\tijdelijk.xlsx");
+                File.Delete(pathToTemp + @"\tijdelijk.xlsx");
             }
             catch
             {
