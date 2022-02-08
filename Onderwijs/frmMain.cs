@@ -379,6 +379,7 @@ namespace Onderwijs
                 else
                 {
                     MessageBox.Show("Iets gaat hier niet chocotof!", "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Program.logMessage("Save MISLUKT", cnnOnderwijs);
                 }
             }
         }

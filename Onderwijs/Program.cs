@@ -124,7 +124,7 @@ namespace Onderwijs
             catch
             {
                 transOnderwijs.Rollback();
-                MessageBox.Show("Iets gaat hier niet chocotof!", "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Iets gaat er niet chocotof bij het loggen!", "Whoopsy Daisy...", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
